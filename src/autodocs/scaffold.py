@@ -49,7 +49,7 @@ jobs:
           python-version: "3.12"
 
       - name: Install autodocs
-        run: pip install "autodocs[ai]"
+        run: pip install "autodocs[ai] @ git+https://github.com/ShivamBwaj/autodocs.git"
 
       - name: Generate documentation
         run: autodocs generate --source {source} --output _site --format html --ai --incremental
