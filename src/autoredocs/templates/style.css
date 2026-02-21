@@ -1,5 +1,5 @@
 /* ================================================================
-   Autodocs — Generated Documentation Stylesheet
+   Autoredocs — Generated Documentation Stylesheet
    Premium dark-mode design with glassmorphism
    ================================================================ */
 
@@ -37,8 +37,15 @@
     --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box; }
-html { scroll-behavior: smooth; }
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
 
 body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -63,7 +70,9 @@ body {
     background: var(--bg-sidebar);
     border-right: 1px solid var(--border);
     position: fixed;
-    top: 0; left: 0; bottom: 0;
+    top: 0;
+    left: 0;
+    bottom: 0;
     overflow-y: auto;
     z-index: 100;
     display: flex;
@@ -183,13 +192,15 @@ body {
 .sidebar-toggle {
     display: none;
     position: fixed;
-    top: 16px; left: 16px;
+    top: 16px;
+    left: 16px;
     z-index: 200;
     background: var(--bg-secondary);
     border: 1px solid var(--border);
     color: var(--text-primary);
     font-size: 20px;
-    width: 40px; height: 40px;
+    width: 40px;
+    height: 40px;
     border-radius: var(--radius-sm);
     cursor: pointer;
     transition: all var(--transition);
@@ -318,7 +329,9 @@ body {
 .stat-card::before {
     content: '';
     position: absolute;
-    top: 0; left: 0; right: 0;
+    top: 0;
+    left: 0;
+    right: 0;
     height: 3px;
     background: var(--accent-gradient);
     opacity: 0;
@@ -470,7 +483,8 @@ body {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 18px; height: 18px;
+    width: 18px;
+    height: 18px;
     border-radius: 4px;
     font-size: 10px;
     font-weight: 700;
@@ -495,7 +509,12 @@ body {
 
 /* -- Typography ---------------------------------------------------- */
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
     color: var(--text-primary);
     font-weight: 600;
     letter-spacing: -0.3px;
@@ -536,7 +555,10 @@ h4 {
     font-weight: 600;
 }
 
-p { margin-bottom: 16px; color: var(--text-secondary); }
+p {
+    margin-bottom: 16px;
+    color: var(--text-secondary);
+}
 
 /* -- Code ---------------------------------------------------------- */
 
@@ -610,7 +632,8 @@ pre code {
     color: var(--accent-primary);
 }
 
-.type-badge.func, .type-badge.method {
+.type-badge.func,
+.type-badge.method {
     background: rgba(96, 165, 250, 0.15);
     color: var(--accent-secondary);
 }
@@ -715,10 +738,23 @@ pre code {
 
 /* -- Scrollbar ----------------------------------------------------- */
 
-::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: var(--border-hover); }
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--border-hover);
+}
 
 /* -- Responsive ---------------------------------------------------- */
 

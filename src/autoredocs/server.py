@@ -1,4 +1,4 @@
-"""FastAPI server for autodocs — live documentation build & serve."""
+"""FastAPI server for autoredocs — live documentation build & serve."""
 
 from __future__ import annotations
 
@@ -7,9 +7,9 @@ import hmac
 import logging
 from pathlib import Path
 
-from autodocs.generator import HTMLGenerator, MarkdownGenerator
-from autodocs.parser import PythonParser
-from autodocs.state import STATE_FILENAME, BuildState
+from autoredocs.generator import HTMLGenerator, MarkdownGenerator
+from autoredocs.parser import PythonParser
+from autoredocs.state import STATE_FILENAME, BuildState
 
 logger = logging.getLogger(__name__)
 
@@ -30,14 +30,14 @@ def create_app(
         from fastapi.staticfiles import StaticFiles
     except ImportError as exc:
         raise ImportError(
-            "FastAPI is required for server mode. Install with: pip install autodocs[server]"
+            "FastAPI is required for server mode. Install with: pip install autoredocs[server]"
         ) from exc
 
     source = Path(source).resolve()
     output = Path(output).resolve()
 
     app = FastAPI(
-        title="autodocs API",
+        title="autoredocs API",
         description="Live documentation build service",
         version="0.2.0",
     )

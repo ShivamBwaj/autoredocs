@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pytest
 
-from autodocs.parser import PythonParser
+from autoredocs.parser import PythonParser
 
 FIXTURES = Path(__file__).parent / "fixtures"
 

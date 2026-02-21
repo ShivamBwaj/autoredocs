@@ -7,8 +7,8 @@ import logging
 import re
 from pathlib import Path
 
-from autodocs.models import ArgInfo, ClassDoc, FunctionDoc, ModuleDoc
-from autodocs.parsers.base import BaseParser
+from autoredocs.models import ArgInfo, ClassDoc, FunctionDoc, ModuleDoc
+from autoredocs.parsers.base import BaseParser
 
 logger = logging.getLogger(__name__)
 

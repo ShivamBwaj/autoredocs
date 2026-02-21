@@ -1,4 +1,4 @@
-"""Sample Python module for testing autodocs parser.
+"""Sample Python module for testing autoredocs parser.
 
 This module contains a variety of code structures to ensure
 the parser correctly extracts functions, classes, decorators,

@@ -1,4 +1,4 @@
-"""Vercel serverless function handler for autodocs.
+"""Vercel serverless function handler for autoredocs.
 
 Deploy this as a Vercel serverless function to handle
 GitHub webhooks and trigger documentation rebuilds.
@@ -41,9 +41,9 @@ def handler(request):
 
     # Run build
     try:
-        from autodocs.parser import PythonParser
-        from autodocs.generator import HTMLGenerator, MarkdownGenerator
-        from autodocs.state import STATE_FILENAME, BuildState
+        from autoredocs.parser import PythonParser
+        from autoredocs.generator import HTMLGenerator, MarkdownGenerator
+        from autoredocs.state import STATE_FILENAME, BuildState
 
         source = Path(os.getenv("AUTODOCS_SOURCE", ".")).resolve()
         output = Path(os.getenv("AUTODOCS_OUTPUT", "/tmp/docs")).resolve()
@@ -72,7 +72,7 @@ def handler(request):
         # Optional deploy
         deploy_target = os.getenv("AUTODOCS_DEPLOY_TARGET", "")
         if deploy_target:
-            from autodocs.deploy import get_deployer
+            from autoredocs.deploy import get_deployer
 
             deployer = get_deployer(deploy_target)
             url = deployer.deploy(output)

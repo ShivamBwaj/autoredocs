@@ -1,4 +1,4 @@
-"""Autodocs CLI — command-line interface for generating code documentation."""
+"""Autoredocs CLI — command-line interface for generating code documentation."""
 
 from __future__ import annotations
 
@@ -13,15 +13,15 @@ import typer
 from rich.console import Console
 from rich.panel import Panel
 
-from autodocs import __version__
-from autodocs.config import AutodocsConfig
-from autodocs.generator import HTMLGenerator, MarkdownGenerator
-from autodocs.parsers.base import MultiParser
-from autodocs.state import STATE_FILENAME, BuildState
-from autodocs.watcher import watch_and_rebuild
+from autoredocs import __version__
+from autoredocs.config import AutoredocsConfig
+from autoredocs.generator import HTMLGenerator, MarkdownGenerator
+from autoredocs.parsers.base import MultiParser
+from autoredocs.state import STATE_FILENAME, BuildState
+from autoredocs.watcher import watch_and_rebuild
 
 app = typer.Typer(
-    name="autodocs",
+    name="autoredocs",
     help="Real-time, self-maintaining code documentation tool.",
     add_completion=False,
     rich_markup_mode="rich",
@@ -35,13 +35,13 @@ def _build_docs(
     source: Path,
     output: Path,
     fmt: str,
-    config: AutodocsConfig,
+    config: AutoredocsConfig,
     *,
     incremental: bool = False,
     ai: bool = False,
 ) -> None:
     """Core build pipeline: parse -> [AI fill] -> generate (with optional incremental mode)."""
-    from autodocs.reporter import BuildReport, ChangeItem
+    from autoredocs.reporter import BuildReport, ChangeItem
 
     parser = MultiParser(exclude_private=config.exclude_private)
     report = BuildReport(
@@ -108,7 +108,7 @@ def _build_docs(
     # AI auto-fill missing docstrings (only on changed files)
     if ai:
         try:
-            from autodocs.ai import DocGenerator
+            from autoredocs.ai import DocGenerator
 
             api_key = config.ai.resolve_api_key()
             if api_key:
@@ -211,9 +211,9 @@ def _resolve_paths(
     output: str | None,
     fmt: str | None,
     config_file: str | None,
-) -> tuple[Path, Path, str, AutodocsConfig]:
+) -> tuple[Path, Path, str, AutoredocsConfig]:
     """Resolve CLI args with config file fallbacks."""
-    config = AutodocsConfig.load(config_file)
+    config = AutoredocsConfig.load(config_file)
 
     src = Path(source or config.source).resolve()
     out = Path(output or config.output).resolve()
@@ -230,7 +230,7 @@ def generate(
     source: str = typer.Option(None, "--source", "-s", help="Source directory to parse"),
     output: str = typer.Option(None, "--output", "-o", help="Output directory for docs"),
     format: str = typer.Option(None, "--format", "-f", help="Output format: markdown or html"),
-    config: str = typer.Option(None, "--config", "-c", help="Path to autodocs.yaml"),
+    config: str = typer.Option(None, "--config", "-c", help="Path to autoredocs.yaml"),
     incremental: bool = typer.Option(
         False, "--incremental", "-i", help="Only rebuild changed files"
     ),
@@ -257,7 +257,7 @@ def generate(
             f"[bold]Output:[/bold] {out}\n"
             f"[bold]Format:[/bold] {fmt}\n"
             f"[bold]Mode:[/bold] {mode_str}",
-            title="[bold cyan]autodocs generate[/bold cyan]",
+            title="[bold cyan]autoredocs generate[/bold cyan]",
             border_style="cyan",
         )
     )
@@ -271,7 +271,7 @@ def generate(
     # Auto-deploy after successful build
     if deploy:
         try:
-            from autodocs.deploy import get_deployer
+            from autoredocs.deploy import get_deployer
 
             deployer = get_deployer(deploy)
             console.print(f"\n[cyan]Deploying to {deploy}...[/cyan]")
@@ -286,7 +286,7 @@ def watch(
     source: str = typer.Option(None, "--source", "-s", help="Source directory to watch"),
     output: str = typer.Option(None, "--output", "-o", help="Output directory for docs"),
     format: str = typer.Option(None, "--format", "-f", help="Output format: markdown or html"),
-    config: str = typer.Option(None, "--config", "-c", help="Path to autodocs.yaml"),
+    config: str = typer.Option(None, "--config", "-c", help="Path to autoredocs.yaml"),
 ) -> None:
     """Watch for file changes and auto-regenerate docs."""
     src, out, fmt, cfg = _resolve_paths(source, output, format, config)
@@ -296,11 +296,11 @@ def watch(
         raise typer.Exit(1)
 
     # Initial build (incremental so subsequent rebuilds only show real changes)
-    console.print("[bold cyan]autodocs watch[/bold cyan]\n")
+    console.print("[bold cyan]autoredocs watch[/bold cyan]\n")
     _build_docs(src, out, fmt, cfg, incremental=True)
 
     # Watch loop
-    from autodocs.parsers import ALL_EXTENSIONS
+    from autoredocs.parsers import ALL_EXTENSIONS
 
     rebuild_fn = partial(_build_docs, src, out, fmt, cfg, incremental=True)
     watch_and_rebuild(src, rebuild_fn, extensions=ALL_EXTENSIONS)
@@ -310,7 +310,7 @@ def watch(
 def preview(
     source: str = typer.Option(None, "--source", "-s", help="Source directory to parse"),
     output: str = typer.Option(None, "--output", "-o", help="Output directory for docs"),
-    config: str = typer.Option(None, "--config", "-c", help="Path to autodocs.yaml"),
+    config: str = typer.Option(None, "--config", "-c", help="Path to autoredocs.yaml"),
     port: int = typer.Option(None, "--port", "-p", help="Port for the preview server"),
 ) -> None:
     """Generate HTML docs and open a local preview server."""
@@ -322,7 +322,7 @@ def preview(
         raise typer.Exit(1)
 
     # Build HTML docs
-    console.print("[bold cyan]autodocs preview[/bold cyan]\n")
+    console.print("[bold cyan]autoredocs preview[/bold cyan]\n")
     _build_docs(src, out, "html", cfg)
 
     # Start HTTP server
@@ -352,30 +352,30 @@ def init(
     ci: bool = typer.Option(True, "--ci/--no-ci", help="Scaffold GitHub Actions workflow"),
     with_ai: bool = typer.Option(True, "--ai/--no-ai", help="Include .env.example for AI setup"),
 ) -> None:
-    """Initialize autodocs in your project — scaffolds config, CI/CD, and env files."""
-    from autodocs.scaffold import update_gitignore, write_env_example, write_workflow
+    """Initialize autoredocs in your project — scaffolds config, CI/CD, and env files."""
+    from autoredocs.scaffold import update_gitignore, write_env_example, write_workflow
 
     project = Path(path).resolve()
     project_name = project.name
     created: list[str] = []
     skipped: list[str] = []
 
-    # 1. autodocs.yaml
-    config_path = project / "autodocs.yaml"
+    # 1. autoredocs.yaml
+    config_path = project / "autoredocs.yaml"
     if config_path.exists():
-        skipped.append("autodocs.yaml (already exists)")
+        skipped.append("autoredocs.yaml (already exists)")
     else:
-        cfg = AutodocsConfig(title=f"{project_name} Documentation", source=source)
+        cfg = AutoredocsConfig(title=f"{project_name} Documentation", source=source)
         cfg.save(config_path)
-        created.append("autodocs.yaml")
+        created.append("autoredocs.yaml")
 
     # 2. GitHub Actions workflow
     if ci:
         wf = write_workflow(project, source)
         if wf:
-            created.append(".github/workflows/autodocs.yml")
+            created.append(".github/workflows/autoredocs.yml")
         else:
-            skipped.append(".github/workflows/autodocs.yml (already exists)")
+            skipped.append(".github/workflows/autoredocs.yml (already exists)")
 
     # 3. .env.example
     if with_ai:
@@ -395,7 +395,7 @@ def init(
     console.print()
     console.print(
         Panel(
-            f"[bold cyan]autodocs[/bold cyan] initialized in [green]{project}[/green]",
+            f"[bold cyan]autoredocs[/bold cyan] initialized in [green]{project}[/green]",
             title="✨ Project Ready",
             border_style="cyan",
         )
@@ -414,10 +414,10 @@ def init(
     # Next steps
     console.print("\n[bold]Next steps:[/bold]\n")
     console.print(
-        f"  1. [cyan]autodocs generate --source {source} --output docs --format html[/cyan]"
+        f"  1. [cyan]autoredocs generate --source {source} --output docs --format html[/cyan]"
     )
     console.print("     Generate docs locally to preview\n")
-    console.print(f"  2. [cyan]autodocs preview --source {source}[/cyan]")
+    console.print(f"  2. [cyan]autoredocs preview --source {source}[/cyan]")
     console.print("     Open a live preview in your browser\n")
     if with_ai:
         console.print("  3. [cyan]cp .env.example .env[/cyan]  →  add your GROQ_API_KEY")
@@ -438,14 +438,14 @@ def init(
 @app.command("ai-fill")
 def ai_fill(
     source: str = typer.Option(None, "--source", "-s", help="Source directory to scan"),
-    config: str = typer.Option(None, "--config", "-c", help="Path to autodocs.yaml"),
+    config: str = typer.Option(None, "--config", "-c", help="Path to autoredocs.yaml"),
     dry_run: bool = typer.Option(False, "--dry-run", "-n", help="Preview without writing changes"),
     style: str = typer.Option(None, "--style", help="Docstring style: google, numpy, sphinx"),
 ) -> None:
     """Generate missing docstrings using AI (OpenAI GPT)."""
-    from autodocs.ai import DocGenerator
+    from autoredocs.ai import DocGenerator
 
-    cfg = AutodocsConfig.load(config)
+    cfg = AutoredocsConfig.load(config)
     src = Path(source or cfg.source).resolve()
 
     if not src.exists():
@@ -459,7 +459,7 @@ def ai_fill(
     if not api_key:
         console.print(
             "[red]Error:[/red] No Groq API key found.\n"
-            "  Set [cyan]GROQ_API_KEY[/cyan] in .env or autodocs.yaml"
+            "  Set [cyan]GROQ_API_KEY[/cyan] in .env or autoredocs.yaml"
         )
         raise typer.Exit(1)
 
@@ -468,7 +468,7 @@ def ai_fill(
             f"[bold]Source:[/bold] {src}\n"
             f"[bold]Style:[/bold] {doc_style}\n"
             f"[bold]Mode:[/bold] {'dry-run (preview)' if dry_run else 'write'}",
-            title="[bold cyan]autodocs ai-fill[/bold cyan]",
+            title="[bold cyan]autoredocs ai-fill[/bold cyan]",
             border_style="cyan",
         )
     )
@@ -517,14 +517,14 @@ def serve(
     source: str = typer.Option(None, "--source", "-s", help="Source directory"),
     output: str = typer.Option(None, "--output", "-o", help="Output directory"),
     fmt: str = typer.Option(None, "--format", "-f", help="Output format (html/markdown)"),
-    config: str = typer.Option(None, "--config", "-c", help="Path to autodocs.yaml"),
+    config: str = typer.Option(None, "--config", "-c", help="Path to autoredocs.yaml"),
     port: int = typer.Option(None, "--port", "-p", help="Server port (default: 8000)"),
     webhook_secret: str = typer.Option("", "--webhook-secret", help="GitHub webhook secret"),
 ) -> None:
     """Start a live documentation server with build API and webhook support."""
-    from autodocs.server import create_app
+    from autoredocs.server import create_app
 
-    cfg = AutodocsConfig.load(config)
+    cfg = AutoredocsConfig.load(config)
     src = source or cfg.source
     out = output or cfg.output
     output_fmt = fmt or cfg.format
@@ -536,7 +536,7 @@ def serve(
             f"[bold]Output:[/bold] {out}\n"
             f"[bold]Format:[/bold] {output_fmt}\n"
             f"[bold]Port:[/bold] {server_port}",
-            title="[bold cyan]autodocs serve[/bold cyan]",
+            title="[bold cyan]autoredocs serve[/bold cyan]",
             border_style="cyan",
         )
     )
@@ -548,7 +548,7 @@ def serve(
     except ImportError:
         console.print(
             "[red]Error:[/red] uvicorn is required for server mode.\n"
-            "  Install with: [cyan]pip install autodocs\\[server][/cyan]"
+            "  Install with: [cyan]pip install autoredocs\\[server][/cyan]"
         )
         raise typer.Exit(1)
 
@@ -561,28 +561,28 @@ def serve(
 def deploy(
     output: str = typer.Option(None, "--output", "-o", help="Docs directory to deploy"),
     target: str = typer.Option(..., "--target", "-t", help="Deploy target: netlify, vercel, or s3"),
-    config: str = typer.Option(None, "--config", "-c", help="Path to autodocs.yaml"),
+    config: str = typer.Option(None, "--config", "-c", help="Path to autoredocs.yaml"),
 ) -> None:
     """Deploy generated docs to a hosting provider."""
-    cfg = AutodocsConfig.load(config)
+    cfg = AutoredocsConfig.load(config)
     out = Path(output or cfg.output).resolve()
 
     if not out.exists() or not any(out.iterdir()):
         console.print(
-            f"[red]Error:[/red] No docs found at {out}\n  Run [cyan]autodocs generate[/cyan] first."
+            f"[red]Error:[/red] No docs found at {out}\n  Run [cyan]autoredocs generate[/cyan] first."
         )
         raise typer.Exit(1)
 
     console.print(
         Panel(
             f"[bold]Source:[/bold] {out}\n[bold]Target:[/bold] {target}",
-            title="[bold cyan]autodocs deploy[/bold cyan]",
+            title="[bold cyan]autoredocs deploy[/bold cyan]",
             border_style="cyan",
         )
     )
 
     try:
-        from autodocs.deploy import get_deployer
+        from autoredocs.deploy import get_deployer
 
         deployer = get_deployer(target)
         url = deployer.deploy(out)
@@ -597,8 +597,8 @@ def deploy(
 
 @app.command()
 def version() -> None:
-    """Show autodocs version."""
-    console.print(f"[bold cyan]autodocs[/bold cyan] v{__version__}")
+    """Show autoredocs version."""
+    console.print(f"[bold cyan]autoredocs[/bold cyan] v{__version__}")
 
 
 # -- Logging setup -------------------------------------------------------------
@@ -608,7 +608,7 @@ def version() -> None:
 def main(
     verbose: bool = typer.Option(False, "--verbose", "-v", help="Enable verbose logging"),
 ) -> None:
-    """Autodocs — self-maintaining code documentation tool."""
+    """Autoredocs — self-maintaining code documentation tool."""
     level = logging.DEBUG if verbose else logging.WARNING
     logging.basicConfig(
         level=level,

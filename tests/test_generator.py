@@ -4,8 +4,8 @@ from pathlib import Path
 
 import pytest
 
-from autodocs.generator import HTMLGenerator, MarkdownGenerator
-from autodocs.parser import PythonParser
+from autoredocs.generator import HTMLGenerator, MarkdownGenerator
+from autoredocs.parser import PythonParser
 
 FIXTURES = Path(__file__).parent / "fixtures"
 

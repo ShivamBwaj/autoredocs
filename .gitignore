@@ -26,8 +26,8 @@ htmlcov/
 .tox/
 .mypy_cache/
 
-# Autodocs
-.autodocs_state.json
+# Autoredocs
+.autoredocs_state.json
 docs/
 test_output/
 

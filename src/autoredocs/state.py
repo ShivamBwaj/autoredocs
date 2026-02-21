@@ -14,7 +14,7 @@ from pathlib import Path
 
 logger = logging.getLogger(__name__)
 
-STATE_FILENAME = ".autodocs_state.json"
+STATE_FILENAME = ".autoredocs_state.json"
 
 
 class BuildState:

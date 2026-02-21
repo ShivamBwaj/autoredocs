@@ -21,12 +21,12 @@ jobs:
         with:
           python-version: ${{ env.PYTHON_VERSION }}
 
-      - name: Install autodocs
+      - name: Install autoredocs
         run: pip install -e ".[ai,server]"
 
       - name: Generate documentation
         run: |
-          autodocs generate \
+          autoredocs generate \
             --source ./src \
             --output ./docs \
             --format html \
@@ -37,7 +37,7 @@ jobs:
 
       - name: Deploy to Netlify
         if: env.NETLIFY_TOKEN != ''
-        run: autodocs deploy --output ./docs --target netlify
+        run: autoredocs deploy --output ./docs --target netlify
         env:
           NETLIFY_TOKEN: ${{ secrets.NETLIFY_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}

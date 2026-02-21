@@ -1,4 +1,4 @@
-"""Configuration management for autodocs."""
+"""Configuration management for autoredocs."""
 
 from __future__ import annotations
 
@@ -15,7 +15,7 @@ try:
 except ImportError:
     pass  # python-dotenv is optional for non-AI usage
 
-DEFAULT_CONFIG_FILENAME = "autodocs.yaml"
+DEFAULT_CONFIG_FILENAME = "autoredocs.yaml"
 
 DEFAULT_EXCLUDES = [
     "__pycache__",
@@ -48,8 +48,8 @@ class AIConfig:
 
 
 @dataclass
-class AutodocsConfig:
-    """Configuration for an autodocs run."""
+class AutoredocsConfig:
+    """Configuration for an autoredocs run."""
 
     title: str = "Project Documentation"
     source: str = "."
@@ -61,7 +61,7 @@ class AutodocsConfig:
     ai: AIConfig = field(default_factory=AIConfig)
 
     @classmethod
-    def load(cls, path: str | Path | None = None) -> AutodocsConfig:
+    def load(cls, path: str | Path | None = None) -> AutoredocsConfig:
         """Load config from a YAML file. Falls back to defaults if file missing."""
         if path is None:
             path = Path.cwd() / DEFAULT_CONFIG_FILENAME

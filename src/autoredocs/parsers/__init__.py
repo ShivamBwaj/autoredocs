@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from autodocs.parsers.base import BaseParser
-from autodocs.parsers.python_parser import PythonParser
+from autoredocs.parsers.base import BaseParser
+from autoredocs.parsers.python_parser import PythonParser
 
 # Registry: extension -> parser class
 PARSER_REGISTRY: dict[str, type[BaseParser]] = {
@@ -11,7 +11,7 @@ PARSER_REGISTRY: dict[str, type[BaseParser]] = {
 }
 
 try:
-    from autodocs.parsers.typescript import TypeScriptParser
+    from autoredocs.parsers.typescript import TypeScriptParser
 
     PARSER_REGISTRY[".ts"] = TypeScriptParser
     PARSER_REGISTRY[".tsx"] = TypeScriptParser
@@ -21,35 +21,35 @@ except ImportError:
     pass
 
 try:
-    from autodocs.parsers.java import JavaParser
+    from autoredocs.parsers.java import JavaParser
 
     PARSER_REGISTRY[".java"] = JavaParser
 except ImportError:
     pass
 
 try:
-    from autodocs.parsers.go import GoParser
+    from autoredocs.parsers.go import GoParser
 
     PARSER_REGISTRY[".go"] = GoParser
 except ImportError:
     pass
 
 try:
-    from autodocs.parsers.rust import RustParser
+    from autoredocs.parsers.rust import RustParser
 
     PARSER_REGISTRY[".rs"] = RustParser
 except ImportError:
     pass
 
 try:
-    from autodocs.parsers.csharp import CSharpParser
+    from autoredocs.parsers.csharp import CSharpParser
 
     PARSER_REGISTRY[".cs"] = CSharpParser
 except ImportError:
     pass
 
 try:
-    from autodocs.parsers.cpp import CppParser
+    from autoredocs.parsers.cpp import CppParser
 
     for _ext in CppParser.extensions:
         PARSER_REGISTRY[_ext] = CppParser
@@ -57,14 +57,14 @@ except ImportError:
     pass
 
 try:
-    from autodocs.parsers.ruby import RubyParser
+    from autoredocs.parsers.ruby import RubyParser
 
     PARSER_REGISTRY[".rb"] = RubyParser
 except ImportError:
     pass
 
 try:
-    from autodocs.parsers.kotlin import KotlinParser
+    from autoredocs.parsers.kotlin import KotlinParser
 
     PARSER_REGISTRY[".kt"] = KotlinParser
     PARSER_REGISTRY[".kts"] = KotlinParser

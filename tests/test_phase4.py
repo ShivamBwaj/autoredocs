@@ -4,11 +4,11 @@ from pathlib import Path
 
 import pytest
 
-from autodocs.parsers.base import BaseParser
-from autodocs.parsers.python_parser import PythonParser
-from autodocs.parsers.typescript import TypeScriptParser
-from autodocs.parsers.java import JavaParser
-from autodocs.parsers import get_parser
+from autoredocs.parsers.base import BaseParser
+from autoredocs.parsers.python_parser import PythonParser
+from autoredocs.parsers.typescript import TypeScriptParser
+from autoredocs.parsers.java import JavaParser
+from autoredocs.parsers import get_parser
 
 FIXTURES = Path(__file__).parent / "fixtures"
 
@@ -123,7 +123,7 @@ class TestJavaParser:
 
 class TestBackwardCompat:
     def test_old_import_works(self):
-        from autodocs.parser import PythonParser as P
+        from autoredocs.parser import PythonParser as P
 
         assert P is PythonParser
 

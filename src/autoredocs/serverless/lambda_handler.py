@@ -1,10 +1,10 @@
-"""AWS Lambda handler for autodocs.
+"""AWS Lambda handler for autoredocs.
 
 Deploy this as a Lambda function (behind API Gateway) to handle
 GitHub webhooks and trigger documentation rebuilds.
 
 Usage:
-    1. Package autodocs as a Lambda layer or bundle
+    1. Package autoredocs as a Lambda layer or bundle
     2. Set env vars: AUTODOCS_SOURCE, AUTODOCS_OUTPUT, GITHUB_WEBHOOK_SECRET
     3. Create API Gateway trigger pointing to this handler
     4. Configure your GitHub repo webhook URL
@@ -50,9 +50,9 @@ def lambda_handler(event: dict, context) -> dict:
 
     # Build docs
     try:
-        from autodocs.parser import PythonParser
-        from autodocs.generator import HTMLGenerator, MarkdownGenerator
-        from autodocs.state import STATE_FILENAME, BuildState
+        from autoredocs.parser import PythonParser
+        from autoredocs.generator import HTMLGenerator, MarkdownGenerator
+        from autoredocs.state import STATE_FILENAME, BuildState
 
         source = Path(os.getenv("AUTODOCS_SOURCE", "/var/task/src")).resolve()
         output = Path(os.getenv("AUTODOCS_OUTPUT", "/tmp/docs")).resolve()
@@ -80,7 +80,7 @@ def lambda_handler(event: dict, context) -> dict:
         # Deploy if target is set
         deploy_target = os.getenv("AUTODOCS_DEPLOY_TARGET", "")
         if deploy_target:
-            from autodocs.deploy import get_deployer
+            from autoredocs.deploy import get_deployer
 
             deployer = get_deployer(deploy_target)
             url = deployer.deploy(output)

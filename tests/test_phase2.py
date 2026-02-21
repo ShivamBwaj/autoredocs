@@ -4,8 +4,8 @@ from pathlib import Path
 
 import pytest
 
-from autodocs.parser import PythonParser
-from autodocs.state import STATE_FILENAME, BuildState
+from autoredocs.parser import PythonParser
+from autoredocs.state import STATE_FILENAME, BuildState
 
 FIXTURES = Path(__file__).parent / "fixtures"
 
@@ -113,7 +113,7 @@ class TestIncrementalCLI:
 
     def test_incremental_creates_state_file(self, tmp_path):
         from typer.testing import CliRunner
-        from autodocs.cli import app
+        from autoredocs.cli import app
 
         runner = CliRunner()
         result = runner.invoke(
@@ -134,7 +134,7 @@ class TestIncrementalCLI:
 
     def test_incremental_second_run_skips(self, tmp_path):
         from typer.testing import CliRunner
-        from autodocs.cli import app
+        from autoredocs.cli import app
 
         runner = CliRunner()
         # First build

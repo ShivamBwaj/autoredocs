@@ -6,7 +6,7 @@ import logging
 from abc import ABC, abstractmethod
 from pathlib import Path
 
-from autodocs.models import ModuleDoc, ProjectDoc
+from autoredocs.models import ModuleDoc, ProjectDoc
 
 logger = logging.getLogger(__name__)
 
@@ -87,7 +87,7 @@ class MultiParser:
         exclude_dirs: list[str] | None = None,
     ) -> ProjectDoc:
         """Parse all supported source files in a directory tree."""
-        from autodocs.parsers import ALL_EXTENSIONS, get_parser
+        from autoredocs.parsers import ALL_EXTENSIONS, get_parser
 
         directory = Path(directory)
         exclude_dirs_set = set(
@@ -133,7 +133,7 @@ class MultiParser:
         exclude_dirs: set[str] | None = None,
     ) -> list[Path]:
         """Find all supported source files in a directory tree."""
-        from autodocs.parsers import ALL_EXTENSIONS
+        from autoredocs.parsers import ALL_EXTENSIONS
 
         directory = Path(directory)
         exclude_dirs = exclude_dirs or {"__pycache__", ".venv", "venv", "node_modules", ".git"}

@@ -28,11 +28,11 @@ jobs:
         with:
           python-version: ${{ env.PYTHON_VERSION }}
 
-      - name: Install autodocs
+      - name: Install autoredocs
         run: pip install -e ".[ai,dev]"
 
       - name: Generate AI-enhanced documentation
-        run: autodocs generate --source src/autodocs --output _site --format html --ai --incremental
+        run: autoredocs generate --source src/autoredocs --output _site --format html --ai --incremental
         env:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
 

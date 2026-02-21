@@ -4,14 +4,14 @@ from pathlib import Path
 
 from typer.testing import CliRunner
 
-from autodocs.cli import app
+from autoredocs.cli import app
 
 runner = CliRunner()
 FIXTURES = Path(__file__).parent / "fixtures"
 
 
 class TestGenerateCommand:
-    """Tests for 'autodocs generate'."""
+    """Tests for 'autoredocs generate'."""
 
     def test_generate_markdown(self, tmp_path):
         result = runner.invoke(
@@ -59,7 +59,7 @@ class TestGenerateCommand:
 
 
 class TestInitCommand:
-    """Tests for 'autodocs init'."""
+    """Tests for 'autoredocs init'."""
 
     def test_creates_config_file(self, tmp_path):
         result = runner.invoke(
@@ -71,7 +71,7 @@ class TestInitCommand:
             ],
         )
         assert result.exit_code == 0
-        config_path = tmp_path / "autodocs.yaml"
+        config_path = tmp_path / "autoredocs.yaml"
         assert config_path.exists()
         content = config_path.read_text()
         assert "title" in content
@@ -79,10 +79,10 @@ class TestInitCommand:
 
 
 class TestVersionCommand:
-    """Tests for 'autodocs version'."""
+    """Tests for 'autoredocs version'."""
 
     def test_shows_version(self):
-        from autodocs import __version__
+        from autoredocs import __version__
 
         result = runner.invoke(app, ["version"])
         assert result.exit_code == 0

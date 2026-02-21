@@ -1,26 +1,26 @@
 <p align="center">
-  <strong>autodocs</strong><br>
+  <strong>autoredocs</strong><br>
   <em>Self-maintaining code documentation that stays in sync with your codebase.</em>
 </p>
 
 <p align="center">
-  <a href="https://github.com/ShivamBwaj/autodocs/actions/workflows/ci.yml"><img src="https://github.com/ShivamBwaj/autodocs/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <a href="https://github.com/ShivamBwaj/autoredocs/actions/workflows/ci.yml"><img src="https://github.com/ShivamBwaj/autoredocs/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
   <a href="https://python.org"><img src="https://img.shields.io/badge/python-3.10+-3776AB?logo=python&logoColor=white" alt="Python 3.10+"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-green" alt="MIT License"></a>
-  <a href="https://pypi.org/project/autodocs/"><img src="https://img.shields.io/badge/version-0.3.0-blue" alt="Version"></a>
-  <a href="https://shivambwaj.github.io/autodocs/"><img src="https://img.shields.io/badge/📖_Live_Demo-GitHub_Pages-orange" alt="Live Demo"></a>
+  <a href="https://pypi.org/project/autoredocs/"><img src="https://img.shields.io/badge/version-0.3.0-blue" alt="Version"></a>
+  <a href="https://shivambwaj.github.io/autoredocs/"><img src="https://img.shields.io/badge/📖_Live_Demo-GitHub_Pages-orange" alt="Live Demo"></a>
 </p>
 
 ---
 
-autodocs parses your source code, detects what changed, generates structured documentation, and optionally fills missing docstrings using AI. It works locally on your machine or remotely via GitHub Actions with zero infrastructure overhead.
+autoredocs parses your source code, detects what changed, generates structured documentation, and optionally fills missing docstrings using AI. It works locally on your machine or remotely via GitHub Actions with zero infrastructure overhead.
 
-> **🔗 [See it in action →](https://shivambwaj.github.io/autodocs/)**
-> autodocs documents its own source code. The live site is auto-generated on every push via GitHub Pages.
+> **🔗 [See it in action →](https://shivambwaj.github.io/autoredocs/)**
+> autoredocs documents its own source code. The live site is auto-generated on every push via GitHub Pages.
 
 ```
-pip install autodocs
-autodocs generate --source ./src --output ./docs --format html
+pip install autoredocs
+autoredocs generate --source ./src --output ./docs --format html
 ```
 
 ---
@@ -47,14 +47,14 @@ autodocs generate --source ./src --output ./docs --format html
 
 ## How It Works
 
-autodocs has three operating modes. Use whichever fits your workflow.
+autoredocs has three operating modes. Use whichever fits your workflow.
 
 ### Local one-shot build
 
 Run the command, get docs, done. Nothing stays running.
 
 ```bash
-autodocs generate --source ./src --output ./docs --format html
+autoredocs generate --source ./src --output ./docs --format html
 ```
 
 ### Local file watcher
@@ -62,7 +62,7 @@ autodocs generate --source ./src --output ./docs --format html
 Watches your filesystem for changes. When you save a file, it rebuilds only the changed files. Does not call any external APIs. Kill with Ctrl+C.
 
 ```bash
-autodocs watch --source ./src --output ./docs
+autoredocs watch --source ./src --output ./docs
 ```
 
 Triggers on: file save, create, delete.
@@ -74,7 +74,7 @@ Uses OS-native file events (inotify / ReadDirectoryChangesW). No polling.
 Push to GitHub. A workflow runs on GitHub's servers, builds docs with AI, and deploys. Your machine does not need to be on.
 
 ```
-git push --> GitHub Actions --> autodocs generate --ai --incremental --> deploy to Netlify
+git push --> GitHub Actions --> autoredocs generate --ai --incremental --> deploy to Netlify
 ```
 
 The runner starts, builds, deploys, and shuts down. Nothing stays running between pushes.
@@ -85,23 +85,23 @@ The runner starts, builds, deploys, and shuts down. Nothing stays running betwee
 
 ```bash
 # Core
-pip install autodocs
+pip install autoredocs
 
 # With AI (Groq / Llama 3.3)
-pip install "autodocs[ai]"
+pip install "autoredocs[ai]"
 
 # With deploy (Netlify, Vercel, S3)
-pip install "autodocs[deploy]"
+pip install "autoredocs[deploy]"
 
 # With live server (FastAPI)
-pip install "autodocs[server]"
+pip install "autoredocs[server]"
 
 # Everything
-pip install "autodocs[all]"
+pip install "autoredocs[all]"
 
 # Development
-git clone https://github.com/ShivamBwaj/autodocs.git
-cd autodocs
+git clone https://github.com/ShivamBwaj/autoredocs.git
+cd autoredocs
 pip install -e ".[dev]"
 ```
 
@@ -111,38 +111,38 @@ pip install -e ".[dev]"
 
 ```bash
 # 1. Initialize your project (creates config, CI/CD workflow, .env.example, .gitignore)
-autodocs init --source ./src
+autoredocs init --source ./src
 
 # 2. Generate HTML documentation
-autodocs generate --source ./src --output ./docs --format html
+autoredocs generate --source ./src --output ./docs --format html
 
 # 3. Preview in browser
-autodocs preview --source ./src
+autoredocs preview --source ./src
 
 # 4. Watch for changes
-autodocs watch --source ./src --output ./docs
+autoredocs watch --source ./src --output ./docs
 
 # 5. Fill missing docstrings with AI
-autodocs ai-fill --source ./src --dry-run
+autoredocs ai-fill --source ./src --dry-run
 
 # 6. Generate + AI fill + deploy in one command
-autodocs generate --source ./src --ai --deploy netlify --incremental
+autoredocs generate --source ./src --ai --deploy netlify --incremental
 ```
 
 ### Use on an existing project
 
 ```bash
 cd /path/to/your-project
-pip install "autodocs[ai]"
+pip install "autoredocs[ai]"
 
-# Scaffold everything — creates autodocs.yaml, GitHub Actions, .env.example, .gitignore
-autodocs init --source ./src
+# Scaffold everything — creates autoredocs.yaml, GitHub Actions, .env.example, .gitignore
+autoredocs init --source ./src
 
 # Generate docs right away
-autodocs generate --source ./src --output ./docs --format html
+autoredocs generate --source ./src --output ./docs --format html
 
 # For AI docstrings: copy .env.example to .env, add your GROQ_API_KEY
-# Then: autodocs generate --source ./src --output ./docs --format html --ai
+# Then: autoredocs generate --source ./src --output ./docs --format html --ai
 ```
 
 > **GitHub Pages deployment**: Enable Pages at `Settings → Pages → Source → GitHub Actions`, add `GROQ_API_KEY` as a repo secret, push to `main` — done.
@@ -159,7 +159,7 @@ autodocs generate --source ./src --output ./docs --format html
 | `ai-fill` | Fill missing docstrings using Groq API |
 | `deploy` | Deploy built docs to Netlify, Vercel, or S3 |
 | `serve` | Start FastAPI server with webhook endpoint |
-| `init` | Create default `autodocs.yaml` config file |
+| `init` | Create default `autoredocs.yaml` config file |
 | `version` | Print version |
 
 ### `generate` flags
@@ -172,13 +172,13 @@ autodocs generate --source ./src --output ./docs --format html
 | `--incremental`, `-i` | Only rebuild changed files (SHA-256 hash comparison) |
 | `--ai` | Fill missing docstrings before generating (only changed files in incremental mode) |
 | `--deploy`, `-d` | Deploy after build: `netlify`, `vercel`, or `s3` |
-| `--config`, `-c` | Path to `autodocs.yaml` |
+| `--config`, `-c` | Path to `autoredocs.yaml` |
 
 ---
 
 ## Configuration
 
-Run `autodocs init` to create `autodocs.yaml`:
+Run `autoredocs init` to create `autoredocs.yaml`:
 
 ```yaml
 title: My Project Docs
@@ -227,27 +227,27 @@ You only need the variables for features you actually use. For local builds with
 
 ## AI Docstring Generation
 
-autodocs uses the [Groq API](https://groq.com) with Llama 3.3 70B to generate missing docstrings. The AI is opt-in and never runs unless you explicitly request it.
+autoredocs uses the [Groq API](https://groq.com) with Llama 3.3 70B to generate missing docstrings. The AI is opt-in and never runs unless you explicitly request it.
 
 | Scenario | AI called? |
 |----------|-----------|
-| `autodocs generate` | No |
-| `autodocs generate --ai` | Yes, all files |
-| `autodocs generate --ai --incremental` | Yes, changed files only |
-| `autodocs generate --ai --incremental` (nothing changed) | No |
-| `autodocs watch` | No |
-| `autodocs ai-fill --dry-run` | Yes (preview, no writes) |
-| `autodocs ai-fill` | Yes (writes to files) |
+| `autoredocs generate` | No |
+| `autoredocs generate --ai` | Yes, all files |
+| `autoredocs generate --ai --incremental` | Yes, changed files only |
+| `autoredocs generate --ai --incremental` (nothing changed) | No |
+| `autoredocs watch` | No |
+| `autoredocs ai-fill --dry-run` | Yes (preview, no writes) |
+| `autoredocs ai-fill` | Yes (writes to files) |
 | GitHub Actions (`deploy.yml`) | Yes, changed files only |
 
 Supports three docstring styles: **Google**, **NumPy**, and **Sphinx**.
 
 ```bash
 # Preview what AI would generate (no file changes)
-autodocs ai-fill --source ./src --style numpy --dry-run
+autoredocs ai-fill --source ./src --style numpy --dry-run
 
 # Write AI-generated docstrings into source files
-autodocs ai-fill --source ./src --style google
+autoredocs ai-fill --source ./src --style google
 ```
 
 ---
@@ -289,8 +289,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - run: pip install autodocs
-      - run: autodocs generate --source ./src --output _site --format html
+      - run: pip install autoredocs
+      - run: autoredocs generate --source ./src --output _site --format html
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site
@@ -314,7 +314,7 @@ Every push auto-rebuilds and redeploys. No hosting costs, no tokens.
 ### Netlify
 
 ```bash
-autodocs deploy --output ./docs --target netlify
+autoredocs deploy --output ./docs --target netlify
 ```
 
 Requires: `NETLIFY_TOKEN` in `.env`.
@@ -322,7 +322,7 @@ Requires: `NETLIFY_TOKEN` in `.env`.
 ### Vercel
 
 ```bash
-autodocs deploy --output ./docs --target vercel
+autoredocs deploy --output ./docs --target vercel
 ```
 
 Requires: `VERCEL_TOKEN` in `.env`.
@@ -330,7 +330,7 @@ Requires: `VERCEL_TOKEN` in `.env`.
 ### AWS S3
 
 ```bash
-autodocs deploy --output ./docs --target s3
+autoredocs deploy --output ./docs --target s3
 ```
 
 Requires: `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `S3_BUCKET` in `.env`.
@@ -338,7 +338,7 @@ Requires: `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `S3_BUCKET` in `.env`.
 ### One-command build + deploy
 
 ```bash
-autodocs generate --source ./src --ai --deploy netlify --incremental
+autoredocs generate --source ./src --ai --deploy netlify --incremental
 ```
 
 ---
@@ -347,9 +347,9 @@ autodocs generate --source ./src --ai --deploy netlify --incremental
 
 Pre-built webhook handlers for Vercel Functions and AWS Lambda. They receive GitHub push webhooks, verify the signature, rebuild docs, and optionally deploy.
 
-**Vercel:** Copy `src/autodocs/serverless/vercel_handler.py` to `api/webhook.py` in your Vercel project.
+**Vercel:** Copy `src/autoredocs/serverless/vercel_handler.py` to `api/webhook.py` in your Vercel project.
 
-**Lambda:** Set handler to `autodocs.serverless.lambda_handler.lambda_handler`.
+**Lambda:** Set handler to `autoredocs.serverless.lambda_handler.lambda_handler`.
 
 Both require these environment variables on the hosting platform:
 
@@ -444,8 +444,8 @@ Every build writes `build_report.json` to the output directory:
 ## Project Structure
 
 ```
-autodocs/
-  src/autodocs/
+autoredocs/
+  src/autoredocs/
     cli.py               # CLI (9 commands)
     config.py            # YAML configuration
     ai.py                # Groq API integration
@@ -471,7 +471,7 @@ autodocs/
     ci.yml               # Lint + test
     deploy.yml           # Build + deploy
   .env.example           # Environment template
-  autodocs.yaml          # Project config
+  autoredocs.yaml          # Project config
   pyproject.toml         # Package metadata
 ```
 

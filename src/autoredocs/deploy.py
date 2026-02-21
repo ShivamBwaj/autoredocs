@@ -69,7 +69,7 @@ class NetlifyDeployer(BaseDeployer):
             resp = httpx.post(
                 f"{self.API_BASE}/sites",
                 headers=headers,
-                json={"name": f"autodocs-{docs_dir.name}"},
+                json={"name": f"autoredocs-{docs_dir.name}"},
                 timeout=30,
             )
             resp.raise_for_status()
@@ -172,7 +172,7 @@ class VercelDeployer(BaseDeployer):
                 data = path.read_text(encoding="utf-8", errors="replace")
                 files.append({"file": rel, "data": data})
 
-        payload: dict = {"files": files, "name": "autodocs"}
+        payload: dict = {"files": files, "name": "autoredocs"}
         if self.project_id:
             payload["project"] = self.project_id
 
