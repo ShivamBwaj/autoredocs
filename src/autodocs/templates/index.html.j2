@@ -1,0 +1,27 @@
+<h1>{{ project.title }}</h1>
+
+<div class="stats">
+    <div class="stat">
+        <span class="stat-value">{{ project.module_count }}</span>
+        <span class="stat-label">modules</span>
+    </div>
+    <div class="stat">
+        <span class="stat-value">{{ project.function_count }}</span>
+        <span class="stat-label">functions</span>
+    </div>
+    <div class="stat">
+        <span class="stat-value">{{ project.class_count }}</span>
+        <span class="stat-label">classes</span>
+    </div>
+</div>
+
+<h2>Modules</h2>
+
+{% for module in project.modules %}
+<div class="module-card">
+    <a href="{{ module.module_name.replace('.', '/') }}.html">{{ module.module_name }}</a>
+    {% if module.docstring %}
+    <div class="description">{{ module.docstring.split('\n')[0] }}</div>
+    {% endif %}
+</div>
+{% endfor %}

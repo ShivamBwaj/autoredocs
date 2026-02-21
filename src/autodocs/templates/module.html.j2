@@ -1,0 +1,76 @@
+<h1>{{ module.module_name }}</h1>
+
+{% if module.docstring %}
+<p>{{ module.docstring }}</p>
+{% endif %}
+
+<p class="meta" style="color: var(--text-muted); font-size: 13px;">Source: <code>{{ module.filepath }}</code></p>
+
+{% if module.classes %}
+<h2>Classes</h2>
+
+{% for cls in module.classes %}
+<div class="doc-block{% if cls.is_deprecated %} deprecated{% endif %}">
+    {% if cls.is_deprecated %}
+    <span class="badge-deprecated">DEPRECATED</span>
+    {% endif %}
+
+    {% for dec in cls.decorators %}
+    <span class="decorator">@{{ dec }}</span>
+    {% endfor %}
+
+    <div class="signature">{{ cls.signature }}</div>
+
+    {% if cls.docstring %}
+    <div class="docstring">{{ cls.docstring }}</div>
+    {% endif %}
+
+    <div class="meta">Line {{ cls.line_number }}</div>
+
+    {% if cls.methods %}
+    <h4>Methods</h4>
+    {% for method in cls.methods %}
+    <div class="doc-block{% if method.is_deprecated %} deprecated{% endif %}" style="border-left-color: var(--accent-secondary); margin-left: 16px;">
+        {% if method.is_deprecated %}
+        <span class="badge-deprecated">DEPRECATED</span>
+        {% endif %}
+
+        {% for dec in method.decorators %}
+        <span class="decorator">@{{ dec }}</span>
+        {% endfor %}
+
+        <div class="signature">{{ method.signature }}</div>
+
+        {% if method.docstring %}
+        <div class="docstring">{{ method.docstring }}</div>
+        {% endif %}
+    </div>
+    {% endfor %}
+    {% endif %}
+</div>
+{% endfor %}
+{% endif %}
+
+{% if module.functions %}
+<h2>Functions</h2>
+
+{% for func in module.functions %}
+<div class="doc-block{% if func.is_deprecated %} deprecated{% endif %}">
+    {% if func.is_deprecated %}
+    <span class="badge-deprecated">DEPRECATED</span>
+    {% endif %}
+
+    {% for dec in func.decorators %}
+    <span class="decorator">@{{ dec }}</span>
+    {% endfor %}
+
+    <div class="signature">{{ func.signature }}</div>
+
+    {% if func.docstring %}
+    <div class="docstring">{{ func.docstring }}</div>
+    {% endif %}
+
+    <div class="meta">Line {{ func.line_number }}</div>
+</div>
+{% endfor %}
+{% endif %}
