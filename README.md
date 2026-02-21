@@ -387,11 +387,17 @@ The `deploy.yml` workflow is for teams that want AI-generated docstrings include
 
 ## Supported Languages
 
-| Language | Parser | What it extracts |
-|----------|--------|------------------|
-| **Python** | AST | Functions, classes, arguments, type hints, decorators, docstrings, deprecation markers |
-| **TypeScript / JavaScript** | Regex | Functions, arrow functions, classes, interfaces, type aliases, JSDoc comments |
-| **Java** | Regex | Classes, interfaces, enums, methods, Javadoc comments |
+| Language | Parser | Extensions | AI Docs | What it extracts |
+|----------|--------|-----------|---------|-----------------|
+| **Python** | AST | `.py` | ✅ AST | Functions, classes, args, type hints, decorators, docstrings |
+| **TypeScript / JavaScript** | Regex | `.ts .tsx .js .jsx` | ✅ Generic | Functions, arrow fns, classes, interfaces, JSDoc |
+| **Java** | Regex | `.java` | ✅ Generic | Classes, interfaces, enums, methods, Javadoc |
+| **Go** | Regex | `.go` | ✅ Generic | Functions, structs, methods, interfaces, GoDoc |
+| **Rust** | Regex | `.rs` | ✅ Generic | Functions, structs, enums, traits, impl blocks, rustdoc |
+| **C#** | Regex | `.cs` | ✅ Generic | Classes, interfaces, structs, enums, methods, XML doc |
+| **C / C++** | Regex | `.c .cpp .h .hpp` | ✅ Generic | Functions, classes, structs, Doxygen comments |
+| **Ruby** | Regex | `.rb` | ✅ Generic | Classes, modules, methods, RDoc |
+| **Kotlin** | Regex | `.kt .kts` | ✅ Generic | Classes, interfaces, objects, functions, KDoc |
 
 ---
 

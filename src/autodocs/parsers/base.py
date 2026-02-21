@@ -70,3 +70,76 @@ class BaseParser(ABC):
         if self.exclude_private and name.startswith("_") and not name.startswith("__"):
             return False
         return True
+
+
+class MultiParser:
+    """Delegates parsing to the correct language parser based on file extension.
+
+    Scans all supported file types in a single directory pass.
+    """
+
+    def __init__(self, exclude_private: bool = False):
+        self.exclude_private = exclude_private
+
+    def parse_directory(
+        self,
+        directory: str | Path,
+        exclude_dirs: list[str] | None = None,
+    ) -> ProjectDoc:
+        """Parse all supported source files in a directory tree."""
+        from autodocs.parsers import ALL_EXTENSIONS, get_parser
+
+        directory = Path(directory)
+        exclude_dirs_set = set(
+            exclude_dirs or ["__pycache__", ".venv", "venv", "node_modules", ".git"]
+        )
+
+        project = ProjectDoc(title=directory.name)
+        # Cache parser instances by extension
+        parser_cache: dict[str, BaseParser] = {}
+
+        for ext in ALL_EXTENSIONS:
+            for src_file in sorted(directory.rglob(f"*{ext}")):
+                if any(part in exclude_dirs_set for part in src_file.parts):
+                    continue
+
+                if ext not in parser_cache:
+                    p = get_parser(ext)
+                    if p is None:
+                        continue
+                    p.exclude_private = self.exclude_private
+                    parser_cache[ext] = p
+
+                parser = parser_cache[ext]
+                module = parser.parse_file(src_file)
+                if module and not module.is_empty:
+                    try:
+                        rel = src_file.relative_to(directory)
+                        parts = list(rel.parts[:-1]) + [rel.stem]
+                        if parts[-1] in ("__init__", "index"):
+                            parts = parts[:-1]
+                        if parts:
+                            module.module_name = ".".join(parts)
+                    except ValueError:
+                        pass
+
+                    project.modules.append(module)
+
+        return project
+
+    def find_all_source_files(
+        self,
+        directory: str | Path,
+        exclude_dirs: set[str] | None = None,
+    ) -> list[Path]:
+        """Find all supported source files in a directory tree."""
+        from autodocs.parsers import ALL_EXTENSIONS
+
+        directory = Path(directory)
+        exclude_dirs = exclude_dirs or {"__pycache__", ".venv", "venv", "node_modules", ".git"}
+        files: list[Path] = []
+        for ext in ALL_EXTENSIONS:
+            for src_file in sorted(directory.rglob(f"*{ext}")):
+                if not any(part in exclude_dirs for part in src_file.parts):
+                    files.append(src_file)
+        return sorted(files)

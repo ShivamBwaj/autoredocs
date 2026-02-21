@@ -27,6 +27,53 @@ try:
 except ImportError:
     pass
 
+try:
+    from autodocs.parsers.go import GoParser
+
+    PARSER_REGISTRY[".go"] = GoParser
+except ImportError:
+    pass
+
+try:
+    from autodocs.parsers.rust import RustParser
+
+    PARSER_REGISTRY[".rs"] = RustParser
+except ImportError:
+    pass
+
+try:
+    from autodocs.parsers.csharp import CSharpParser
+
+    PARSER_REGISTRY[".cs"] = CSharpParser
+except ImportError:
+    pass
+
+try:
+    from autodocs.parsers.cpp import CppParser
+
+    for _ext in CppParser.extensions:
+        PARSER_REGISTRY[_ext] = CppParser
+except ImportError:
+    pass
+
+try:
+    from autodocs.parsers.ruby import RubyParser
+
+    PARSER_REGISTRY[".rb"] = RubyParser
+except ImportError:
+    pass
+
+try:
+    from autodocs.parsers.kotlin import KotlinParser
+
+    PARSER_REGISTRY[".kt"] = KotlinParser
+    PARSER_REGISTRY[".kts"] = KotlinParser
+except ImportError:
+    pass
+
+# Convenience set of all supported extensions
+ALL_EXTENSIONS: set[str] = set(PARSER_REGISTRY.keys())
+
 
 def get_parser(extension: str) -> BaseParser | None:
     """Return a parser instance for the given file extension."""
@@ -34,4 +81,4 @@ def get_parser(extension: str) -> BaseParser | None:
     return cls() if cls else None
 
 
-__all__ = ["BaseParser", "PythonParser", "PARSER_REGISTRY", "get_parser"]
+__all__ = ["BaseParser", "PythonParser", "PARSER_REGISTRY", "ALL_EXTENSIONS", "get_parser"]

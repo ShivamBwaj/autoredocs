@@ -30,7 +30,7 @@ class TestParserRegistry:
         assert isinstance(p, JavaParser)
 
     def test_unknown_extension(self):
-        assert get_parser(".rb") is None
+        assert get_parser(".xyz") is None
 
 
 # -- TypeScript parser tests ---------------------------------------------------

@@ -16,7 +16,7 @@ from rich.panel import Panel
 from autodocs import __version__
 from autodocs.config import AutodocsConfig
 from autodocs.generator import HTMLGenerator, MarkdownGenerator
-from autodocs.parser import PythonParser
+from autodocs.parsers.base import MultiParser
 from autodocs.state import STATE_FILENAME, BuildState
 from autodocs.watcher import watch_and_rebuild
 
@@ -43,7 +43,7 @@ def _build_docs(
     """Core build pipeline: parse -> [AI fill] -> generate (with optional incremental mode)."""
     from autodocs.reporter import BuildReport, ChangeItem
 
-    parser = PythonParser(exclude_private=config.exclude_private)
+    parser = MultiParser(exclude_private=config.exclude_private)
     report = BuildReport(
         source=str(source),
         output=str(output),
@@ -55,11 +55,10 @@ def _build_docs(
 
     if incremental:
         state = BuildState(output / STATE_FILENAME)
-        py_files = sorted(source.rglob("*.py"))
-        py_files = [f for f in py_files if not any(p in exclude_dirs for p in f.parts)]
+        src_files = parser.find_all_source_files(source, exclude_dirs)
 
-        changed, unchanged, deleted = state.compute_diff(py_files)
-        report.files_scanned = len(py_files) + len(deleted)
+        changed, unchanged, deleted = state.compute_diff(src_files)
+        report.files_scanned = len(src_files) + len(deleted)
         report.files_changed = len(changed)
         report.files_unchanged = len(unchanged)
         report.files_deleted = len(deleted)
@@ -93,16 +92,15 @@ def _build_docs(
             )
 
         # Update state
-        for f in py_files:
+        for f in src_files:
             state.update(f)
         for f in deleted:
             state.remove(f)
         state.save()
     else:
-        py_files = sorted(source.rglob("*.py"))
-        py_files = [f for f in py_files if not any(p in exclude_dirs for p in f.parts)]
-        report.files_scanned = len(py_files)
-        report.files_changed = len(py_files)
+        src_files = parser.find_all_source_files(source, exclude_dirs)
+        report.files_scanned = len(src_files)
+        report.files_changed = len(src_files)
 
         project = parser.parse_directory(source, exclude_dirs=list(exclude_dirs))
         project.title = config.title
@@ -121,18 +119,23 @@ def _build_docs(
                     max_tokens=config.ai.max_tokens,
                 )
                 # Only run AI on changed files (incremental) or all files (full build)
-                ai_targets = changed if incremental else py_files
-                for py_file in ai_targets:
-                    suggestions = gen_ai.fill_missing_docstrings(py_file, dry_run=False)
+                ai_targets = changed if incremental else src_files
+                for src_file in ai_targets:
+                    if src_file.suffix == ".py":
+                        # Python: precise AST-based docstring injection
+                        suggestions = gen_ai.fill_missing_docstrings(src_file, dry_run=False)
+                    else:
+                        # All other languages: generic AI doc fill
+                        suggestions = gen_ai.fill_missing_docs_generic(src_file, dry_run=False)
                     report.ai_filled_count += len(suggestions)
                     for s in suggestions:
                         report.changes.append(
                             ChangeItem(
                                 name=s["name"],
-                                module=py_file.stem,
+                                module=src_file.stem,
                                 kind=s["type"],
                                 action="added",
-                                line=s["line"],
+                                line=s.get("line", 0),
                             )
                         )
 
