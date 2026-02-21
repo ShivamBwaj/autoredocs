@@ -8,11 +8,15 @@
   <a href="https://python.org"><img src="https://img.shields.io/badge/python-3.10+-3776AB?logo=python&logoColor=white" alt="Python 3.10+"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-green" alt="MIT License"></a>
   <a href="https://pypi.org/project/autodocs/"><img src="https://img.shields.io/badge/version-0.3.0-blue" alt="Version"></a>
+  <a href="https://shivambwaj.github.io/autodocs/"><img src="https://img.shields.io/badge/📖_Live_Demo-GitHub_Pages-orange" alt="Live Demo"></a>
 </p>
 
 ---
 
 autodocs parses your source code, detects what changed, generates structured documentation, and optionally fills missing docstrings using AI. It works locally on your machine or remotely via GitHub Actions with zero infrastructure overhead.
+
+> **🔗 [See it in action →](https://shivambwaj.github.io/autodocs/)**
+> autodocs documents its own source code. The live site is auto-generated on every push via GitHub Pages.
 
 ```
 pip install autodocs
