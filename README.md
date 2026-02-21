@@ -351,7 +351,7 @@ This repo includes three workflows:
 | Workflow | File | What it does | Tokens needed |
 |----------|------|-------------|---------------|
 | **CI** | `ci.yml` | Lint + tests on every push | None |
-| **Docs** | `docs.yml` | Build docs → deploy to **GitHub Pages** | None |
+| **Docs** | `docs.yml` | Build AI-enhanced docs → deploy to **GitHub Pages** | `GROQ_API_KEY` |
 | **Deploy** | `deploy.yml` | Build docs with AI → deploy to **Netlify** | `GROQ_API_KEY` + `NETLIFY_TOKEN` |
 
 ### GitHub Pages (recommended)
@@ -361,7 +361,8 @@ This is the default. The `docs.yml` workflow runs on every push to `main`, gener
 **Setup:**
 
 1. Go to your repo **Settings > Pages > Source** and select **GitHub Actions**.
-2. Push to `main`. Done.
+2. Go to **Settings > Secrets and variables > Actions** and add `GROQ_API_KEY` with your Groq API key.
+3. Push to `main`. Done.
 
 Your docs will be live at `https://YOUR_USERNAME.github.io/YOUR_REPO/`.
 

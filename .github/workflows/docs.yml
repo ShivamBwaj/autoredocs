@@ -29,10 +29,12 @@ jobs:
           python-version: ${{ env.PYTHON_VERSION }}
 
       - name: Install autodocs
-        run: pip install -e ".[dev]"
+        run: pip install -e ".[ai,dev]"
 
-      - name: Generate documentation
-        run: autodocs generate --source src/autodocs --output _site --format html
+      - name: Generate AI-enhanced documentation
+        run: autodocs generate --source src/autodocs --output _site --format html --ai --incremental
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
