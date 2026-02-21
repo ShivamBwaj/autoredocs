@@ -1,0 +1,45 @@
+# Publish autoredocs to PyPI when a GitHub Release is created.
+#
+# Setup (one-time):
+#   1. Go to pypi.org → Account Settings → Publishing
+#   2. Add a "Trusted Publisher":
+#        PyPI project: autoredocs
+#        Owner:        ShivamBwaj
+#        Repository:   autoredocs
+#        Workflow:     publish.yml
+#        Environment:  pypi
+#   3. Create a GitHub environment called "pypi" (Settings → Environments)
+#
+# Usage:
+#   1. Bump version in pyproject.toml + src/autoredocs/__init__.py
+#   2. Commit, push, create a Release on GitHub (tag: v0.x.x)
+#   3. This workflow builds + publishes automatically
+
+name: Publish to PyPI
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      id-token: write  # Required for trusted publishing
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install build tools
+        run: pip install build
+
+      - name: Build package
+        run: python -m build
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
