@@ -84,6 +84,18 @@ class TypeScriptParser(BaseParser):
     extensions = [".ts", ".tsx", ".js", ".jsx"]
 
     def parse_file(self, filepath: str | Path) -> ModuleDoc | None:
+        """Parse a JavaScript file and extract its documentation.
+
+        Args:
+            filepath: The path to the JavaScript file to parse. Can be a string or a Path object.
+
+        Returns:
+            A ModuleDoc object representing the parsed JavaScript file, or None if the file does not exist or cannot be read.
+
+        Raises:
+            OSError: If the file cannot be read due to a system-level error.
+            UnicodeDecodeError: If the file cannot be read due to encoding issues.
+        """
         filepath = Path(filepath)
         if not filepath.exists():
             return None

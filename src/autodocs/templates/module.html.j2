@@ -1,19 +1,48 @@
-<h1>{{ module.module_name }}</h1>
+<div class="module-header">
+    <div class="breadcrumb">
+        <a href="{{ '../' * module.module_name.split('.')|length if '.' in module.module_name else '' }}index.html">Index</a>
+        <span class="breadcrumb-sep">›</span>
+        <span>{{ module.module_name }}</span>
+    </div>
+    <h1>{{ module.module_name }}</h1>
+    {% if module.docstring %}
+    <p class="module-desc">{{ module.docstring }}</p>
+    {% endif %}
+    <p class="meta-line">📄 <code>{{ module.filepath }}</code></p>
+</div>
 
-{% if module.docstring %}
-<p>{{ module.docstring }}</p>
+<!-- Table of contents -->
+{% if module.classes or module.functions %}
+<div class="toc-card">
+    <h3>Contents</h3>
+    <div class="toc-list">
+        {% for cls in module.classes %}
+        <a href="#class-{{ cls.name }}" class="toc-item toc-class">
+            <span class="toc-badge class">C</span> {{ cls.name }}
+            {% if cls.is_deprecated %}<span class="badge-deprecated-sm">deprecated</span>{% endif %}
+        </a>
+        {% endfor %}
+        {% for func in module.functions %}
+        <a href="#func-{{ func.name }}" class="toc-item toc-func">
+            <span class="toc-badge func">F</span> {{ func.name }}
+            {% if func.is_deprecated %}<span class="badge-deprecated-sm">deprecated</span>{% endif %}
+        </a>
+        {% endfor %}
+    </div>
+</div>
 {% endif %}
-
-<p class="meta" style="color: var(--text-muted); font-size: 13px;">Source: <code>{{ module.filepath }}</code></p>
 
 {% if module.classes %}
 <h2>Classes</h2>
 
 {% for cls in module.classes %}
-<div class="doc-block{% if cls.is_deprecated %} deprecated{% endif %}">
-    {% if cls.is_deprecated %}
-    <span class="badge-deprecated">DEPRECATED</span>
-    {% endif %}
+<div class="doc-block{% if cls.is_deprecated %} deprecated{% endif %}" id="class-{{ cls.name }}">
+    <div class="doc-block-header">
+        <span class="type-badge class">class</span>
+        {% if cls.is_deprecated %}
+        <span class="badge-deprecated">DEPRECATED</span>
+        {% endif %}
+    </div>
 
     {% for dec in cls.decorators %}
     <span class="decorator">@{{ dec }}</span>
@@ -25,27 +54,32 @@
     <div class="docstring">{{ cls.docstring }}</div>
     {% endif %}
 
-    <div class="meta">Line {{ cls.line_number }}</div>
+    <div class="meta">📍 Line {{ cls.line_number }}</div>
 
     {% if cls.methods %}
-    <h4>Methods</h4>
-    {% for method in cls.methods %}
-    <div class="doc-block{% if method.is_deprecated %} deprecated{% endif %}" style="border-left-color: var(--accent-secondary); margin-left: 16px;">
-        {% if method.is_deprecated %}
-        <span class="badge-deprecated">DEPRECATED</span>
-        {% endif %}
+    <div class="methods-section">
+        <h4>Methods</h4>
+        {% for method in cls.methods %}
+        <div class="doc-block method-block{% if method.is_deprecated %} deprecated{% endif %}">
+            <div class="doc-block-header">
+                <span class="type-badge method">def</span>
+                {% if method.is_deprecated %}
+                <span class="badge-deprecated">DEPRECATED</span>
+                {% endif %}
+            </div>
 
-        {% for dec in method.decorators %}
-        <span class="decorator">@{{ dec }}</span>
+            {% for dec in method.decorators %}
+            <span class="decorator">@{{ dec }}</span>
+            {% endfor %}
+
+            <div class="signature">{{ method.signature }}</div>
+
+            {% if method.docstring %}
+            <div class="docstring">{{ method.docstring }}</div>
+            {% endif %}
+        </div>
         {% endfor %}
-
-        <div class="signature">{{ method.signature }}</div>
-
-        {% if method.docstring %}
-        <div class="docstring">{{ method.docstring }}</div>
-        {% endif %}
     </div>
-    {% endfor %}
     {% endif %}
 </div>
 {% endfor %}
@@ -55,10 +89,13 @@
 <h2>Functions</h2>
 
 {% for func in module.functions %}
-<div class="doc-block{% if func.is_deprecated %} deprecated{% endif %}">
-    {% if func.is_deprecated %}
-    <span class="badge-deprecated">DEPRECATED</span>
-    {% endif %}
+<div class="doc-block{% if func.is_deprecated %} deprecated{% endif %}" id="func-{{ func.name }}">
+    <div class="doc-block-header">
+        <span class="type-badge func">def</span>
+        {% if func.is_deprecated %}
+        <span class="badge-deprecated">DEPRECATED</span>
+        {% endif %}
+    </div>
 
     {% for dec in func.decorators %}
     <span class="decorator">@{{ dec }}</span>
@@ -70,7 +107,7 @@
     <div class="docstring">{{ func.docstring }}</div>
     {% endif %}
 
-    <div class="meta">Line {{ func.line_number }}</div>
+    <div class="meta">📍 Line {{ func.line_number }}</div>
 </div>
 {% endfor %}
 {% endif %}

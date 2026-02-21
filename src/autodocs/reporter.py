@@ -49,18 +49,68 @@ class BuildReport:
 
     @property
     def added(self) -> list[ChangeItem]:
+        """Fetch a list of change items marked as 'added'.
+
+        Args:
+            self: The current object instance.
+
+        Returns:
+            A list of ChangeItem objects that have been added.
+
+        Raises:
+            AttributeError: If self.changes is not a list or attribute.
+            TypeError: If self.changes contains non-ChangeItem objects.
+        """
         return [c for c in self.changes if c.action == "added"]
 
     @property
     def modified(self) -> list[ChangeItem]:
+        """Fetch modified change items from the list of changes.
+
+        Args:
+            self: The instance of the class containing the changes.
+
+        Returns:
+            A list of ChangeItem objects that have been modified.
+
+        Raises:
+            AttributeError: If the instance does not have a 'changes' attribute.
+        """
         return [c for c in self.changes if c.action == "modified"]
 
     @property
     def removed(self) -> list[ChangeItem]:
+        """Fetch removed changes from the list of changes.
+
+        Args:
+            self: The instance of the class.
+            None: This property does not take any explicit arguments.
+
+        Returns:
+            A list of ChangeItem objects representing removed changes.
+
+        Raises:
+            AttributeError: If the 'changes' attribute is not set.
+            TypeError: If the 'changes' attribute is not a list.
+        """
         return [c for c in self.changes if c.action == "removed"]
 
     @property
     def deprecated(self) -> list[ChangeItem]:
+        """Fetch deprecated changes from the list of changes.
+
+        Args:
+            self: The instance of the class containing the changes.
+            None: This method is a property and does not accept any additional arguments.
+
+        Returns:
+            A list of ChangeItem objects representing deprecated changes.
+
+        Raises:
+            AttributeError: If the instance does not have a 'changes' attribute.
+
+        Note: This method is deprecated and should not be used in new code.
+        """
         return [c for c in self.changes if c.action == "deprecated"]
 
     def to_json(self) -> str:

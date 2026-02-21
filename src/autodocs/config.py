@@ -38,7 +38,7 @@ class AIConfig:
 
     enabled: bool = True
     api_key: str = ""
-    model: str = "llama-3.3-70b-versatile"
+    model: str = "llama-3.1-8b-instant"
     style: str = "google"  # google, numpy, sphinx
     max_tokens: int = 300
 

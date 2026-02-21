@@ -98,6 +98,17 @@ class DocGenerator:
         style: str = "google",
         max_tokens: int = 300,
     ):
+        """Initialize the Groq API client.
+
+        Args:
+            api_key: The Groq API key to use, or None to load from the environment variable GROQ_API_KEY.
+            model: The default Groq model to use.
+            style: The style of the Groq API response (default: 'google').
+            max_tokens: The maximum number of tokens to use in the Groq API request (default: 300).
+
+        Raises:
+            ValueError: If the Groq API key is not found in the environment variable or passed via config.
+        """
         self.api_key = api_key or os.getenv("GROQ_API_KEY", "")
         self.model = model
         self.style = style

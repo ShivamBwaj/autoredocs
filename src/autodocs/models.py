@@ -90,12 +90,45 @@ class ProjectDoc:
 
     @property
     def module_count(self) -> int:
+        """Returns the total number of modules in the module collection.
+
+        Args:
+            None
+
+        Returns:
+            The total count of modules as an integer.
+
+        Raises:
+            AttributeError: If the module collection is not initialized.
+        """
         return len(self.modules)
 
     @property
     def function_count(self) -> int:
+        """Returns the total number of functions across all modules.
+
+        Args:
+            self: The object instance.
+
+        Returns:
+            The total number of functions as an integer.
+
+        Raises:
+            AttributeError: If the object instance does not have a 'modules' attribute.
+        """
         return sum(len(m.functions) for m in self.modules)
 
     @property
     def class_count(self) -> int:
+        """Returns the total number of classes across all modules in the system.
+
+        Args:
+            self: The current object instance.
+
+        Returns:
+            The total count of classes as an integer.
+
+        Raises:
+            AttributeError: If the object instance does not have a 'modules' attribute.
+        """
         return sum(len(m.classes) for m in self.modules)

@@ -16,6 +16,17 @@ class MarkdownGenerator:
     """Generates Markdown documentation from parsed project data."""
 
     def __init__(self):
+        """Initializes a Jinja2 Environment instance.
+
+        Args:
+            TEMPLATES_DIR: The path to the templates directory.
+
+        Returns:
+            A Jinja2 Environment instance configured for file system template loading.
+
+        Raises:
+            None
+        """
         self.env = Environment(
             loader=FileSystemLoader(str(TEMPLATES_DIR)),
             autoescape=False,
@@ -55,6 +66,17 @@ class HTMLGenerator:
     """Generates styled HTML documentation from parsed project data."""
 
     def __init__(self):
+        """Initialize a Jinja2 template environment and load CSS styles.
+
+        Args:
+            None
+
+        Returns:
+            None
+
+        Raises:
+            None
+        """
         self.env = Environment(
             loader=FileSystemLoader(str(TEMPLATES_DIR)),
             autoescape=select_autoescape(["html"]),

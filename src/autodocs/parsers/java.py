@@ -71,6 +71,18 @@ class JavaParser(BaseParser):
     extensions = [".java"]
 
     def parse_file(self, filepath: str | Path) -> ModuleDoc | None:
+        """Fetch a module's documentation from a file.
+
+        Args:
+            filepath: The path to the file containing the module's source code.
+
+        Returns:
+            A ModuleDoc object representing the module, or None if the file does not exist or cannot be read.
+
+        Raises:
+            OSError: If the file cannot be read due to a system error.
+            UnicodeDecodeError: If the file cannot be read due to a Unicode encoding error.
+        """
         filepath = Path(filepath)
         if not filepath.exists():
             return None

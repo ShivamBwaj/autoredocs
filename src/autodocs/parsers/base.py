@@ -18,6 +18,11 @@ class BaseParser(ABC):
     extensions: list[str] = []
 
     def __init__(self, exclude_private: bool = False):
+        """Initialize an object with the exclude private attribute.
+
+        Args:
+            exclude_private: A boolean flag to exclude private attributes from the object.
+        """
         self.exclude_private = exclude_private
 
     @abstractmethod

@@ -21,6 +21,15 @@ class BuildState:
     """Tracks file hashes for incremental builds."""
 
     def __init__(self, state_path: Path):
+        """Initialize the state object.
+
+        Args:
+            state_path: The path to the state file.
+
+        Raises:
+            FileNotFoundError: If the state file does not exist.
+            OSError: If an error occurs while loading the state file.
+        """
         self._path = state_path
         self._hashes: dict[str, str] = {}
         self._load()

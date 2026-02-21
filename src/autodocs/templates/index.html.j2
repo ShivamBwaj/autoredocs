@@ -1,15 +1,18 @@
-<h1>{{ project.title }}</h1>
+<div class="hero">
+    <h1>{{ project.title }}</h1>
+    <p class="hero-sub">Auto-generated API documentation</p>
+</div>
 
 <div class="stats">
-    <div class="stat">
+    <div class="stat-card">
         <span class="stat-value">{{ project.module_count }}</span>
         <span class="stat-label">modules</span>
     </div>
-    <div class="stat">
+    <div class="stat-card">
         <span class="stat-value">{{ project.function_count }}</span>
         <span class="stat-label">functions</span>
     </div>
-    <div class="stat">
+    <div class="stat-card">
         <span class="stat-value">{{ project.class_count }}</span>
         <span class="stat-label">classes</span>
     </div>
@@ -17,11 +20,23 @@
 
 <h2>Modules</h2>
 
+<div class="module-grid">
 {% for module in project.modules %}
 <div class="module-card">
-    <a href="{{ module.module_name.replace('.', '/') }}.html">{{ module.module_name }}</a>
+    <div class="module-card-header">
+        <span class="module-icon">📦</span>
+        <a href="{{ module.module_name.replace('.', '/') }}.html">{{ module.module_name }}</a>
+    </div>
     {% if module.docstring %}
     <div class="description">{{ module.docstring.split('\n')[0] }}</div>
+    {% else %}
+    <div class="description muted">No description available</div>
     {% endif %}
+    <div class="module-meta">
+        <span>{{ module.functions|length }} functions</span>
+        <span>·</span>
+        <span>{{ module.classes|length }} classes</span>
+    </div>
 </div>
 {% endfor %}
+</div>

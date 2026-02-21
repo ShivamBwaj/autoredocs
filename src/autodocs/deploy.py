@@ -32,6 +32,15 @@ class NetlifyDeployer(BaseDeployer):
         token: str | None = None,
         site_id: str | None = None,
     ):
+        """Initializes the Netlify API client.
+
+        Args:
+            token: The Netlify token, or None to use the NETLIFY_TOKEN environment variable.
+            site_id: The site ID, or None to use the NETLIFY_SITE_ID environment variable.
+
+        Raises:
+            ValueError: If the Netlify token is not provided and not set in the NETLIFY_TOKEN environment variable.
+        """
         self.token = token or os.getenv("NETLIFY_TOKEN", "")
         self.site_id = site_id or os.getenv("NETLIFY_SITE_ID", "")
 
@@ -39,6 +48,18 @@ class NetlifyDeployer(BaseDeployer):
             raise ValueError("Netlify token required. Set NETLIFY_TOKEN env var.")
 
     def deploy(self, docs_dir: Path) -> str:
+        """Deploy Netlify site and upload files.
+
+        Args:
+            docs_dir: The directory containing the files to deploy.
+
+        Returns:
+            The ID of the created deploy.
+
+        Raises:
+            httpx.HTTPError: If the request to the Netlify API fails.
+            Exception: If an unexpected error occurs during deployment.
+        """
         import httpx
 
         headers = {"Authorization": f"Bearer {self.token}"}
@@ -111,6 +132,15 @@ class VercelDeployer(BaseDeployer):
         token: str | None = None,
         project_id: str | None = None,
     ):
+        """Initializes the Vercel client.
+
+        Args:
+            token: Vercel API token, or None to use the VERCEL_TOKEN environment variable.
+            project_id: Vercel project ID, or None to use the VERCEL_PROJECT_ID environment variable.
+
+        Raises:
+            ValueError: If the Vercel token is not provided and not set in the VERCEL_TOKEN environment variable.
+        """
         self.token = token or os.getenv("VERCEL_TOKEN", "")
         self.project_id = project_id or os.getenv("VERCEL_PROJECT_ID", "")
 
@@ -118,6 +148,18 @@ class VercelDeployer(BaseDeployer):
             raise ValueError("Vercel token required. Set VERCEL_TOKEN env var.")
 
     def deploy(self, docs_dir: Path) -> str:
+        """Deploy documentation to Vercel.
+
+        Args:
+            docs_dir: The directory containing the documentation files to deploy.
+
+        Returns:
+            The URL of the deployed documentation.
+
+        Raises:
+            httpx.HTTPError: If the HTTP request to deploy the documentation fails.
+            json.JSONDecodeError: If the response from Vercel is not valid JSON.
+        """
         import httpx
 
         headers = {"Authorization": f"Bearer {self.token}"}
@@ -159,6 +201,15 @@ class S3Deployer(BaseDeployer):
         bucket: str | None = None,
         region: str | None = None,
     ):
+        """Initialize an S3 client with optional bucket and region.
+
+        Args:
+            bucket: The S3 bucket name, or None to use the S3_BUCKET environment variable.
+            region: The AWS region, or None to use the AWS_REGION environment variable.
+
+        Raises:
+            ValueError: If the S3 bucket is not provided and the S3_BUCKET environment variable is not set.
+        """
         self.bucket = bucket or os.getenv("S3_BUCKET", "")
         self.region = region or os.getenv("AWS_REGION", "us-east-1")
 
@@ -166,6 +217,17 @@ class S3Deployer(BaseDeployer):
             raise ValueError("S3 bucket required. Set S3_BUCKET env var.")
 
     def deploy(self, docs_dir: Path) -> str:
+        """Deploy documentation to an S3 bucket.
+
+        Args:
+            docs_dir: The directory containing the documentation to deploy.
+
+        Returns:
+            The URL of the deployed documentation.
+
+        Raises:
+            ImportError: If boto3 is not installed.
+        """
         try:
             import boto3
         except ImportError as exc:
