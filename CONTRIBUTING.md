@@ -5,7 +5,7 @@ Thank you for considering contributing to autodocs.
 ## Development Setup
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/autodocs.git
+git clone https://github.com/ShivamBwaj/autodocs.git
 cd autodocs
 pip install -e ".[dev]"
 ```

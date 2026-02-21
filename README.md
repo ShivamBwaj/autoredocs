@@ -4,7 +4,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/YOUR_USERNAME/autodocs/actions/workflows/ci.yml"><img src="https://github.com/YOUR_USERNAME/autodocs/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <a href="https://github.com/ShivamBwaj/autodocs/actions/workflows/ci.yml"><img src="https://github.com/ShivamBwaj/autodocs/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
   <a href="https://python.org"><img src="https://img.shields.io/badge/python-3.10+-3776AB?logo=python&logoColor=white" alt="Python 3.10+"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-green" alt="MIT License"></a>
   <a href="https://pypi.org/project/autodocs/"><img src="https://img.shields.io/badge/version-0.3.0-blue" alt="Version"></a>
@@ -96,7 +96,7 @@ pip install "autodocs[server]"
 pip install "autodocs[all]"
 
 # Development
-git clone https://github.com/YOUR_USERNAME/autodocs.git
+git clone https://github.com/ShivamBwaj/autodocs.git
 cd autodocs
 pip install -e ".[dev]"
 ```
