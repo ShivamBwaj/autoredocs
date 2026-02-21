@@ -7,7 +7,6 @@ import hmac
 import logging
 from pathlib import Path
 
-from autodocs.config import AutodocsConfig
 from autodocs.generator import HTMLGenerator, MarkdownGenerator
 from autodocs.parser import PythonParser
 from autodocs.state import STATE_FILENAME, BuildState

@@ -2,7 +2,6 @@
 
 from pathlib import Path
 
-import pytest
 from typer.testing import CliRunner
 
 from autodocs.cli import app

@@ -8,7 +8,7 @@ from autodocs.parsers.base import BaseParser
 from autodocs.parsers.python_parser import PythonParser
 from autodocs.parsers.typescript import TypeScriptParser
 from autodocs.parsers.java import JavaParser
-from autodocs.parsers import get_parser, PARSER_REGISTRY
+from autodocs.parsers import get_parser
 
 FIXTURES = Path(__file__).parent / "fixtures"
 
