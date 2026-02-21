@@ -232,6 +232,63 @@ autodocs ai-fill --source ./src --style google
 
 ## Deployment
 
+### GitHub Pages (free, recommended for open-source)
+
+The easiest way to host your docs publicly. Zero tokens needed.
+
+**Step 1:** Enable Pages in your repo:
+- Go to **Settings > Pages > Source** and select **GitHub Actions**
+
+**Step 2:** Copy the docs workflow into your project:
+
+```yaml
+# .github/workflows/docs.yml
+name: Deploy Docs to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install autodocs
+      - run: autodocs generate --source ./src --output _site --format html
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+```
+
+**Step 3:** Push to `main`. Your docs will be live at `https://YOUR_USERNAME.github.io/YOUR_REPO/`.
+
+Every push auto-rebuilds and redeploys. No hosting costs, no tokens.
+
 ### Netlify
 
 ```bash
