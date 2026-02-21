@@ -346,18 +346,33 @@ Both require these environment variables on the hosting platform:
 
 ## CI/CD with GitHub Actions
 
-The included `.github/workflows/deploy.yml` runs on every push to `main`:
+This repo includes three workflows:
 
-1. Installs autodocs.
-2. Runs `autodocs generate --ai --incremental`.
-3. Deploys to Netlify.
-4. Uploads `build_report.json` as an artifact.
+| Workflow | File | What it does | Tokens needed |
+|----------|------|-------------|---------------|
+| **CI** | `ci.yml` | Lint + tests on every push | None |
+| **Docs** | `docs.yml` | Build docs → deploy to **GitHub Pages** | None |
+| **Deploy** | `deploy.yml` | Build docs with AI → deploy to **Netlify** | `GROQ_API_KEY` + `NETLIFY_TOKEN` |
 
-### Setup
+### GitHub Pages (recommended)
 
-1. Push your repo to GitHub.
-2. Go to your repo **Settings > Secrets and variables > Actions**.
-3. Add these secrets:
+This is the default. The `docs.yml` workflow runs on every push to `main`, generates HTML docs, and deploys them to GitHub Pages.
+
+**Setup:**
+
+1. Go to your repo **Settings > Pages > Source** and select **GitHub Actions**.
+2. Push to `main`. Done.
+
+Your docs will be live at `https://YOUR_USERNAME.github.io/YOUR_REPO/`.
+
+### Netlify (optional, for AI-enhanced docs)
+
+The `deploy.yml` workflow is for teams that want AI-generated docstrings included in their hosted docs.
+
+**Setup:**
+
+1. Go to your repo **Settings > Secrets and variables > Actions**.
+2. Add these secrets:
 
 | Secret | Value |
 |--------|-------|
@@ -365,7 +380,7 @@ The included `.github/workflows/deploy.yml` runs on every push to `main`:
 | `NETLIFY_TOKEN` | Your Netlify token |
 | `NETLIFY_SITE_ID` | Your Netlify site ID |
 
-1. Push to `main`. The workflow runs automatically.
+3. Push to `main`. The workflow builds docs with `--ai --incremental` and deploys to Netlify.
 
 ---
 
