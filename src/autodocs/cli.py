@@ -295,13 +295,15 @@ def watch(
         console.print(f"[red]Error:[/red] Source directory not found: {src}")
         raise typer.Exit(1)
 
-    # Initial build
+    # Initial build (incremental so subsequent rebuilds only show real changes)
     console.print("[bold cyan]autodocs watch[/bold cyan]\n")
-    _build_docs(src, out, fmt, cfg)
+    _build_docs(src, out, fmt, cfg, incremental=True)
 
-    # Watch loop (always use incremental for watch mode)
+    # Watch loop
+    from autodocs.parsers import ALL_EXTENSIONS
+
     rebuild_fn = partial(_build_docs, src, out, fmt, cfg, incremental=True)
-    watch_and_rebuild(src, rebuild_fn)
+    watch_and_rebuild(src, rebuild_fn, extensions=ALL_EXTENSIONS)
 
 
 @app.command()
