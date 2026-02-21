@@ -116,13 +116,19 @@ class TestIncrementalCLI:
         from autodocs.cli import app
 
         runner = CliRunner()
-        result = runner.invoke(app, [
-            "generate",
-            "--source", str(FIXTURES),
-            "--output", str(tmp_path / "docs"),
-            "--format", "markdown",
-            "--incremental",
-        ])
+        result = runner.invoke(
+            app,
+            [
+                "generate",
+                "--source",
+                str(FIXTURES),
+                "--output",
+                str(tmp_path / "docs"),
+                "--format",
+                "markdown",
+                "--incremental",
+            ],
+        )
         assert result.exit_code == 0
         assert (tmp_path / "docs" / STATE_FILENAME).exists()
 
@@ -132,14 +138,32 @@ class TestIncrementalCLI:
 
         runner = CliRunner()
         # First build
-        runner.invoke(app, [
-            "generate", "-s", str(FIXTURES), "-o", str(tmp_path / "docs"),
-            "-f", "markdown", "--incremental",
-        ])
+        runner.invoke(
+            app,
+            [
+                "generate",
+                "-s",
+                str(FIXTURES),
+                "-o",
+                str(tmp_path / "docs"),
+                "-f",
+                "markdown",
+                "--incremental",
+            ],
+        )
         # Second build — no changes
-        result = runner.invoke(app, [
-            "generate", "-s", str(FIXTURES), "-o", str(tmp_path / "docs"),
-            "-f", "markdown", "--incremental",
-        ])
+        result = runner.invoke(
+            app,
+            [
+                "generate",
+                "-s",
+                str(FIXTURES),
+                "-o",
+                str(tmp_path / "docs"),
+                "-f",
+                "markdown",
+                "--incremental",
+            ],
+        )
         assert result.exit_code == 0
         assert "No changes detected" in result.output

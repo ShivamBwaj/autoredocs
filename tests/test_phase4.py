@@ -124,6 +124,7 @@ class TestJavaParser:
 class TestBackwardCompat:
     def test_old_import_works(self):
         from autodocs.parser import PythonParser as P
+
         assert P is PythonParser
 
     def test_base_parser_abstract(self):

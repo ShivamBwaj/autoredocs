@@ -12,6 +12,7 @@ PARSER_REGISTRY: dict[str, type[BaseParser]] = {
 
 try:
     from autodocs.parsers.typescript import TypeScriptParser
+
     PARSER_REGISTRY[".ts"] = TypeScriptParser
     PARSER_REGISTRY[".tsx"] = TypeScriptParser
     PARSER_REGISTRY[".js"] = TypeScriptParser
@@ -21,6 +22,7 @@ except ImportError:
 
 try:
     from autodocs.parsers.java import JavaParser
+
     PARSER_REGISTRY[".java"] = JavaParser
 except ImportError:
     pass

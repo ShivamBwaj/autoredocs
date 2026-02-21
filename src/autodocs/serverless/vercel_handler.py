@@ -30,9 +30,7 @@ def handler(request):
     if secret:
         sig = request.headers.get("x-hub-signature-256", "")
         body = request.body.encode() if isinstance(request.body, str) else request.body
-        expected = "sha256=" + hmac.new(
-            secret.encode(), body, hashlib.sha256
-        ).hexdigest()
+        expected = "sha256=" + hmac.new(secret.encode(), body, hashlib.sha256).hexdigest()
         if not hmac.compare_digest(sig, expected):
             return {"statusCode": 403, "body": "Invalid signature"}
 
@@ -75,6 +73,7 @@ def handler(request):
         deploy_target = os.getenv("AUTODOCS_DEPLOY_TARGET", "")
         if deploy_target:
             from autodocs.deploy import get_deployer
+
             deployer = get_deployer(deploy_target)
             url = deployer.deploy(output)
             result["deployed_url"] = url

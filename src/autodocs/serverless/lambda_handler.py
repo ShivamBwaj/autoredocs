@@ -22,7 +22,9 @@ from pathlib import Path
 def lambda_handler(event: dict, context) -> dict:
     """AWS Lambda entry point."""
     # Parse API Gateway event
-    method = event.get("httpMethod", event.get("requestContext", {}).get("http", {}).get("method", ""))
+    method = event.get(
+        "httpMethod", event.get("requestContext", {}).get("http", {}).get("method", "")
+    )
     headers = {k.lower(): v for k, v in (event.get("headers") or {}).items()}
     body = event.get("body", "")
 
@@ -38,9 +40,7 @@ def lambda_handler(event: dict, context) -> dict:
     secret = os.getenv("GITHUB_WEBHOOK_SECRET", "")
     if secret:
         sig = headers.get("x-hub-signature-256", "")
-        expected = "sha256=" + hmac.new(
-            secret.encode(), body_bytes, hashlib.sha256
-        ).hexdigest()
+        expected = "sha256=" + hmac.new(secret.encode(), body_bytes, hashlib.sha256).hexdigest()
         if not hmac.compare_digest(sig, expected):
             return _response(403, {"error": "Invalid signature"})
 
@@ -81,6 +81,7 @@ def lambda_handler(event: dict, context) -> dict:
         deploy_target = os.getenv("AUTODOCS_DEPLOY_TARGET", "")
         if deploy_target:
             from autodocs.deploy import get_deployer
+
             deployer = get_deployer(deploy_target)
             url = deployer.deploy(output)
             result["deployed_url"] = url

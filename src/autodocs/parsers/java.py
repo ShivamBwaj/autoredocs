@@ -24,9 +24,9 @@ _JAVADOC_RE = re.compile(r"/\*\*(.*?)\*/", re.DOTALL)
 _CLASS_RE = re.compile(
     r"^(?:(?:public|private|protected|abstract|final|static)\s+)*"
     r"class\s+(\w+)"
-    r"(?:<[^>]*>)?"                             # generics
-    r"(?:\s+extends\s+([\w.<>,\s]+))?"         # extends
-    r"(?:\s+implements\s+([\w.<>,\s]+))?"      # implements
+    r"(?:<[^>]*>)?"  # generics
+    r"(?:\s+extends\s+([\w.<>,\s]+))?"  # extends
+    r"(?:\s+implements\s+([\w.<>,\s]+))?"  # implements
     r"\s*\{",
     re.MULTILINE,
 )
@@ -44,11 +44,11 @@ _INTERFACE_RE = re.compile(
 _METHOD_RE = re.compile(
     r"^\s+(?:(?:public|private|protected|static|final|abstract|synchronized|native|"
     r"default|strictfp|override)\s+)*"
-    r"(?:<[^>]*>\s+)?"                          # generic return
-    r"([\w.<>,\[\]]+)\s+"                       # return type
-    r"(\w+)"                                    # method name
-    r"\s*\(([^)]*)\)"                           # params
-    r"(?:\s+throws\s+[\w,.\s]+)?"              # throws
+    r"(?:<[^>]*>\s+)?"  # generic return
+    r"([\w.<>,\[\]]+)\s+"  # return type
+    r"(\w+)"  # method name
+    r"\s*\(([^)]*)\)"  # params
+    r"(?:\s+throws\s+[\w,.\s]+)?"  # throws
     r"\s*[{;]",
     re.MULTILINE,
 )
@@ -109,7 +109,7 @@ class JavaParser(BaseParser):
                 name=name,
                 bases=bases,
                 docstring=javadoc_map.get(m.start(), ""),
-                line_number=source[:m.start()].count("\n") + 1,
+                line_number=source[: m.start()].count("\n") + 1,
             )
             cls.methods = self._extract_methods(source, m.end())
             module.classes.append(cls)
@@ -120,26 +120,30 @@ class JavaParser(BaseParser):
             if not self._should_include(name):
                 continue
             bases = [b.strip() for b in (m.group(2) or "").split(",") if b.strip()]
-            module.classes.append(ClassDoc(
-                name=name,
-                bases=bases,
-                docstring=javadoc_map.get(m.start(), ""),
-                decorators=["interface"],
-                line_number=source[:m.start()].count("\n") + 1,
-            ))
+            module.classes.append(
+                ClassDoc(
+                    name=name,
+                    bases=bases,
+                    docstring=javadoc_map.get(m.start(), ""),
+                    decorators=["interface"],
+                    line_number=source[: m.start()].count("\n") + 1,
+                )
+            )
 
         # -- Enums (as classes) ------------------------------------------------
         for m in _ENUM_RE.finditer(source):
             name = m.group(1)
             if not self._should_include(name):
                 continue
-            module.classes.append(ClassDoc(
-                name=name,
-                bases=[],
-                docstring=javadoc_map.get(m.start(), ""),
-                decorators=["enum"],
-                line_number=source[:m.start()].count("\n") + 1,
-            ))
+            module.classes.append(
+                ClassDoc(
+                    name=name,
+                    bases=[],
+                    docstring=javadoc_map.get(m.start(), ""),
+                    decorators=["enum"],
+                    line_number=source[: m.start()].count("\n") + 1,
+                )
+            )
 
         return module
 
@@ -152,9 +156,7 @@ class JavaParser(BaseParser):
             result[target_pos] = _clean_javadoc(m.group(1))
         return result
 
-    def _extract_methods(
-        self, source: str, class_body_start: int
-    ) -> list[FunctionDoc]:
+    def _extract_methods(self, source: str, class_body_start: int) -> list[FunctionDoc]:
         methods: list[FunctionDoc] = []
         depth = 1
         pos = class_body_start
@@ -177,19 +179,22 @@ class JavaParser(BaseParser):
             if not self._should_include(name):
                 continue
 
-            methods.append(FunctionDoc(
-                name=name,
-                args=_parse_java_params(m.group(3)),
-                return_type=return_type,
-                docstring=javadoc_map.get(m.start(), ""),
-                is_method=True,
-                line_number=body[:m.start()].count("\n") + 1,
-            ))
+            methods.append(
+                FunctionDoc(
+                    name=name,
+                    args=_parse_java_params(m.group(3)),
+                    return_type=return_type,
+                    docstring=javadoc_map.get(m.start(), ""),
+                    is_method=True,
+                    line_number=body[: m.start()].count("\n") + 1,
+                )
+            )
 
         return methods
 
 
 # -- Helpers -------------------------------------------------------------------
+
 
 def _clean_javadoc(raw: str) -> str:
     """Clean Javadoc comment text."""

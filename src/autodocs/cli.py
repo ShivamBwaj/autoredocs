@@ -74,14 +74,23 @@ def _build_docs(
 
         # Track changes
         for f in changed:
-            report.changes.append(ChangeItem(
-                name=f.stem, module=f.stem, kind="file",
-                action="modified" if f in [p for p, _ in state._hashes.items()] else "added",
-            ))
+            report.changes.append(
+                ChangeItem(
+                    name=f.stem,
+                    module=f.stem,
+                    kind="file",
+                    action="modified" if f in [p for p, _ in state._hashes.items()] else "added",
+                )
+            )
         for f in deleted:
-            report.changes.append(ChangeItem(
-                name=str(f.name), module=str(f.stem), kind="file", action="removed",
-            ))
+            report.changes.append(
+                ChangeItem(
+                    name=str(f.name),
+                    module=str(f.stem),
+                    kind="file",
+                    action="removed",
+                )
+            )
 
         # Update state
         for f in py_files:
@@ -102,6 +111,7 @@ def _build_docs(
     if ai:
         try:
             from autodocs.ai import DocGenerator
+
             api_key = config.ai.resolve_api_key()
             if api_key:
                 gen_ai = DocGenerator(
@@ -116,10 +126,15 @@ def _build_docs(
                     suggestions = gen_ai.fill_missing_docstrings(py_file, dry_run=False)
                     report.ai_filled_count += len(suggestions)
                     for s in suggestions:
-                        report.changes.append(ChangeItem(
-                            name=s["name"], module=py_file.stem,
-                            kind=s["type"], action="added", line=s["line"],
-                        ))
+                        report.changes.append(
+                            ChangeItem(
+                                name=s["name"],
+                                module=py_file.stem,
+                                kind=s["type"],
+                                action="added",
+                                line=s["line"],
+                            )
+                        )
 
                 # Re-parse after AI fill to get updated docstrings
                 if report.ai_filled_count > 0:
@@ -134,22 +149,37 @@ def _build_docs(
     for m in project.modules:
         for f in m.functions:
             if f.is_deprecated:
-                report.changes.append(ChangeItem(
-                    name=f.name, module=m.module_name,
-                    kind="function", action="deprecated", line=f.line_number,
-                ))
+                report.changes.append(
+                    ChangeItem(
+                        name=f.name,
+                        module=m.module_name,
+                        kind="function",
+                        action="deprecated",
+                        line=f.line_number,
+                    )
+                )
         for c in m.classes:
             if c.is_deprecated:
-                report.changes.append(ChangeItem(
-                    name=c.name, module=m.module_name,
-                    kind="class", action="deprecated", line=c.line_number,
-                ))
+                report.changes.append(
+                    ChangeItem(
+                        name=c.name,
+                        module=m.module_name,
+                        kind="class",
+                        action="deprecated",
+                        line=c.line_number,
+                    )
+                )
             for meth in c.methods:
                 if meth.is_deprecated:
-                    report.changes.append(ChangeItem(
-                        name=f"{c.name}.{meth.name}", module=m.module_name,
-                        kind="method", action="deprecated", line=meth.line_number,
-                    ))
+                    report.changes.append(
+                        ChangeItem(
+                            name=f"{c.name}.{meth.name}",
+                            module=m.module_name,
+                            kind="method",
+                            action="deprecated",
+                            line=meth.line_number,
+                        )
+                    )
 
     report.deprecated_count = len(report.deprecated)
     report.modules = project.module_count
@@ -198,9 +228,13 @@ def generate(
     output: str = typer.Option(None, "--output", "-o", help="Output directory for docs"),
     format: str = typer.Option(None, "--format", "-f", help="Output format: markdown or html"),
     config: str = typer.Option(None, "--config", "-c", help="Path to autodocs.yaml"),
-    incremental: bool = typer.Option(False, "--incremental", "-i", help="Only rebuild changed files"),
+    incremental: bool = typer.Option(
+        False, "--incremental", "-i", help="Only rebuild changed files"
+    ),
     ai: bool = typer.Option(False, "--ai", help="Auto-fill missing docstrings with AI"),
-    deploy: str = typer.Option(None, "--deploy", "-d", help="Deploy after build (netlify/vercel/s3)"),
+    deploy: str = typer.Option(
+        None, "--deploy", "-d", help="Deploy after build (netlify/vercel/s3)"
+    ),
 ) -> None:
     """Generate documentation from your codebase."""
     src, out, fmt, cfg = _resolve_paths(source, output, format, config)
@@ -235,6 +269,7 @@ def generate(
     if deploy:
         try:
             from autodocs.deploy import get_deployer
+
             deployer = get_deployer(deploy)
             console.print(f"\n[cyan]Deploying to {deploy}...[/cyan]")
             url = deployer.deploy(out)
@@ -373,9 +408,7 @@ def ai_fill(
 
         for s in suggestions:
             icon = "[yellow]~[/yellow]" if dry_run else "[green]+[/green]"
-            console.print(
-                f"  {icon} {s['type']} [bold]{s['name']}[/bold] (line {s['line']})"
-            )
+            console.print(f"  {icon} {s['type']} [bold]{s['name']}[/bold] (line {s['line']})")
             if dry_run:
                 # Show preview of generated docstring
                 preview = s["docstring"][:120]
@@ -421,9 +454,7 @@ def serve(
         )
     )
 
-    fastapi_app = create_app(
-        source=src, output=out, fmt=output_fmt, webhook_secret=webhook_secret
-    )
+    fastapi_app = create_app(source=src, output=out, fmt=output_fmt, webhook_secret=webhook_secret)
 
     try:
         import uvicorn
@@ -451,15 +482,13 @@ def deploy(
 
     if not out.exists() or not any(out.iterdir()):
         console.print(
-            f"[red]Error:[/red] No docs found at {out}\n"
-            "  Run [cyan]autodocs generate[/cyan] first."
+            f"[red]Error:[/red] No docs found at {out}\n  Run [cyan]autodocs generate[/cyan] first."
         )
         raise typer.Exit(1)
 
     console.print(
         Panel(
-            f"[bold]Source:[/bold] {out}\n"
-            f"[bold]Target:[/bold] {target}",
+            f"[bold]Source:[/bold] {out}\n[bold]Target:[/bold] {target}",
             title="[bold cyan]autodocs deploy[/bold cyan]",
             border_style="cyan",
         )
@@ -467,6 +496,7 @@ def deploy(
 
     try:
         from autodocs.deploy import get_deployer
+
         deployer = get_deployer(target)
         url = deployer.deploy(out)
         console.print(f"\n[green]Deployed successfully![/green]\n  [cyan]{url}[/cyan]")

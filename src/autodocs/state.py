@@ -78,9 +78,7 @@ class BuildState:
 
     # ── Diff operations ──────────────────────────────────────────
 
-    def compute_diff(
-        self, current_files: list[Path]
-    ) -> tuple[list[Path], list[Path], list[Path]]:
+    def compute_diff(self, current_files: list[Path]) -> tuple[list[Path], list[Path], list[Path]]:
         """Compare current files against stored state.
 
         Returns:

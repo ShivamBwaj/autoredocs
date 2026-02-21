@@ -30,8 +30,7 @@ def create_app(
         from fastapi.staticfiles import StaticFiles
     except ImportError as exc:
         raise ImportError(
-            "FastAPI is required for server mode. "
-            "Install with: pip install autodocs[server]"
+            "FastAPI is required for server mode. Install with: pip install autodocs[server]"
         ) from exc
 
     source = Path(source).resolve()
@@ -77,9 +76,9 @@ def create_app(
         # Verify signature if secret is set
         if webhook_secret:
             sig_header = request.headers.get("X-Hub-Signature-256", "")
-            expected = "sha256=" + hmac.new(
-                webhook_secret.encode(), body, hashlib.sha256
-            ).hexdigest()
+            expected = (
+                "sha256=" + hmac.new(webhook_secret.encode(), body, hashlib.sha256).hexdigest()
+            )
             if not hmac.compare_digest(sig_header, expected):
                 raise HTTPException(403, detail="Invalid signature")
 
@@ -98,8 +97,7 @@ def create_app(
         if index.exists():
             return FileResponse(index)
         return HTMLResponse(
-            "<h1>No docs built yet</h1>"
-            "<p>Send a POST to <code>/build</code> first.</p>",
+            "<h1>No docs built yet</h1><p>Send a POST to <code>/build</code> first.</p>",
             status_code=200,
         )
 

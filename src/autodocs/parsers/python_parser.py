@@ -60,9 +60,7 @@ class PythonParser(BaseParser):
 
     # -- Extraction helpers --------------------------------------------------
 
-    def _extract_function(
-        self, node: ast.FunctionDef | ast.AsyncFunctionDef
-    ) -> FunctionDoc:
+    def _extract_function(self, node: ast.FunctionDef | ast.AsyncFunctionDef) -> FunctionDoc:
         args = self._extract_args(node.args)
         return_type = self._unparse_annotation(node.returns)
         decorators = [self._unparse_node(d) for d in node.decorator_list]

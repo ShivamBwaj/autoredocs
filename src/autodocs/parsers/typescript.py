@@ -23,9 +23,9 @@ _JSDOC_RE = re.compile(r"/\*\*(.*?)\*/", re.DOTALL)
 # function declarations
 _FUNC_RE = re.compile(
     r"^(?:export\s+)?(?:async\s+)?function\s+(\w+)"
-    r"\s*(?:<[^>]*>)?"           # optional generics
-    r"\s*\(([^)]*)\)"            # params
-    r"(?:\s*:\s*([^\s{]+))?"     # optional return type
+    r"\s*(?:<[^>]*>)?"  # optional generics
+    r"\s*\(([^)]*)\)"  # params
+    r"(?:\s*:\s*([^\s{]+))?"  # optional return type
     r"\s*\{",
     re.MULTILINE,
 )
@@ -35,8 +35,8 @@ _ARROW_RE = re.compile(
     r"^(?:export\s+)?(?:const|let|var)\s+(\w+)"
     r"\s*(?::\s*[^=]+?)?\s*=\s*"
     r"(?:async\s+)?"
-    r"\(([^)]*)\)"               # params
-    r"(?:\s*:\s*([^\s=>{]+))?"   # return type
+    r"\(([^)]*)\)"  # params
+    r"(?:\s*:\s*([^\s=>{]+))?"  # return type
     r"\s*=>\s*",
     re.MULTILINE,
 )
@@ -44,9 +44,9 @@ _ARROW_RE = re.compile(
 # Class declaration
 _CLASS_RE = re.compile(
     r"^(?:export\s+)?(?:abstract\s+)?class\s+(\w+)"
-    r"(?:<[^>]*>)?"                          # generics
-    r"(?:\s+extends\s+([\w.<>,\s]+))?"       # extends
-    r"(?:\s+implements\s+([\w.<>,\s]+))?"    # implements
+    r"(?:<[^>]*>)?"  # generics
+    r"(?:\s+extends\s+([\w.<>,\s]+))?"  # extends
+    r"(?:\s+implements\s+([\w.<>,\s]+))?"  # implements
     r"\s*\{",
     re.MULTILINE,
 )
@@ -112,26 +112,30 @@ class TypeScriptParser(BaseParser):
             name = m.group(1)
             if not self._should_include(name):
                 continue
-            module.functions.append(FunctionDoc(
-                name=name,
-                args=_parse_params(m.group(2)),
-                return_type=m.group(3) or "",
-                docstring=jsdoc_map.get(m.start(), ""),
-                is_async="async" in source[max(0, m.start() - 20): m.start()],
-                line_number=source[:m.start()].count("\n") + 1,
-            ))
+            module.functions.append(
+                FunctionDoc(
+                    name=name,
+                    args=_parse_params(m.group(2)),
+                    return_type=m.group(3) or "",
+                    docstring=jsdoc_map.get(m.start(), ""),
+                    is_async="async" in source[max(0, m.start() - 20) : m.start()],
+                    line_number=source[: m.start()].count("\n") + 1,
+                )
+            )
 
         for m in _ARROW_RE.finditer(source):
             name = m.group(1)
             if not self._should_include(name):
                 continue
-            module.functions.append(FunctionDoc(
-                name=name,
-                args=_parse_params(m.group(2)),
-                return_type=m.group(3) or "",
-                docstring=jsdoc_map.get(m.start(), ""),
-                line_number=source[:m.start()].count("\n") + 1,
-            ))
+            module.functions.append(
+                FunctionDoc(
+                    name=name,
+                    args=_parse_params(m.group(2)),
+                    return_type=m.group(3) or "",
+                    docstring=jsdoc_map.get(m.start(), ""),
+                    line_number=source[: m.start()].count("\n") + 1,
+                )
+            )
 
         # -- Classes -----------------------------------------------------------
         for m in _CLASS_RE.finditer(source):
@@ -143,7 +147,7 @@ class TypeScriptParser(BaseParser):
                 name=name,
                 bases=bases,
                 docstring=jsdoc_map.get(m.start(), ""),
-                line_number=source[:m.start()].count("\n") + 1,
+                line_number=source[: m.start()].count("\n") + 1,
             )
             # Extract methods from class body
             cls.methods = self._extract_class_methods(source, m.end())
@@ -155,13 +159,15 @@ class TypeScriptParser(BaseParser):
             if not self._should_include(name):
                 continue
             bases = [b.strip() for b in (m.group(2) or "").split(",") if b.strip()]
-            module.classes.append(ClassDoc(
-                name=name,
-                bases=bases,
-                docstring=jsdoc_map.get(m.start(), ""),
-                decorators=["interface"],
-                line_number=source[:m.start()].count("\n") + 1,
-            ))
+            module.classes.append(
+                ClassDoc(
+                    name=name,
+                    bases=bases,
+                    docstring=jsdoc_map.get(m.start(), ""),
+                    decorators=["interface"],
+                    line_number=source[: m.start()].count("\n") + 1,
+                )
+            )
 
         return module
 
@@ -176,9 +182,7 @@ class TypeScriptParser(BaseParser):
             result[target_pos] = _clean_jsdoc(m.group(1))
         return result
 
-    def _extract_class_methods(
-        self, source: str, class_body_start: int
-    ) -> list[FunctionDoc]:
+    def _extract_class_methods(self, source: str, class_body_start: int) -> list[FunctionDoc]:
         """Extract methods from a class body (simplified brace matching)."""
         methods: list[FunctionDoc] = []
         depth = 1
@@ -202,19 +206,22 @@ class TypeScriptParser(BaseParser):
             if not self._should_include(name):
                 continue
 
-            methods.append(FunctionDoc(
-                name=name,
-                args=_parse_params(m.group(2)),
-                return_type=m.group(3) or "",
-                docstring=jsdoc_map.get(m.start(), ""),
-                is_method=True,
-                line_number=body[:m.start()].count("\n") + 1,
-            ))
+            methods.append(
+                FunctionDoc(
+                    name=name,
+                    args=_parse_params(m.group(2)),
+                    return_type=m.group(3) or "",
+                    docstring=jsdoc_map.get(m.start(), ""),
+                    is_method=True,
+                    line_number=body[: m.start()].count("\n") + 1,
+                )
+            )
 
         return methods
 
 
 # -- Helpers -------------------------------------------------------------------
+
 
 def _clean_jsdoc(raw: str) -> str:
     """Remove leading * from JSDoc lines, trim whitespace."""

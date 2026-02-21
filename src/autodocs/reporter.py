@@ -141,25 +141,17 @@ class BuildReport:
                 f"[dim]{self.files_unchanged} unchanged[/dim] | "
                 f"[red]-{self.files_deleted} deleted[/red]"
             )
-        lines.append(
-            f"[bold]Output:[/bold] {self.files_generated} docs generated"
-        )
+        lines.append(f"[bold]Output:[/bold] {self.files_generated} docs generated")
         lines.append(
             f"[bold]Content:[/bold] {self.modules} modules | "
             f"{self.functions} functions | {self.classes} classes"
         )
         if self.deprecated_count:
-            lines.append(
-                f"[bold yellow]Deprecated:[/bold yellow] {self.deprecated_count} items"
-            )
+            lines.append(f"[bold yellow]Deprecated:[/bold yellow] {self.deprecated_count} items")
         if self.ai_filled_count:
-            lines.append(
-                f"[bold cyan]AI-filled:[/bold cyan] {self.ai_filled_count} docstrings"
-            )
+            lines.append(f"[bold cyan]AI-filled:[/bold cyan] {self.ai_filled_count} docstrings")
         if self.errors:
-            lines.append(
-                f"[bold red]Errors:[/bold red] {len(self.errors)}"
-            )
+            lines.append(f"[bold red]Errors:[/bold red] {len(self.errors)}")
 
         console.print(
             Panel(

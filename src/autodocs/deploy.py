@@ -36,9 +36,7 @@ class NetlifyDeployer(BaseDeployer):
         self.site_id = site_id or os.getenv("NETLIFY_SITE_ID", "")
 
         if not self.token:
-            raise ValueError(
-                "Netlify token required. Set NETLIFY_TOKEN env var."
-            )
+            raise ValueError("Netlify token required. Set NETLIFY_TOKEN env var.")
 
     def deploy(self, docs_dir: Path) -> str:
         import httpx
@@ -83,10 +81,7 @@ class NetlifyDeployer(BaseDeployer):
         for rel_path, sha in file_hashes.items():
             if sha in required:
                 full_path = docs_dir / rel_path.lstrip("/")
-                content_type = (
-                    mimetypes.guess_type(str(full_path))[0]
-                    or "application/octet-stream"
-                )
+                content_type = mimetypes.guess_type(str(full_path))[0] or "application/octet-stream"
                 resp = httpx.put(
                     f"{self.API_BASE}/deploys/{deploy_id}/files{rel_path}",
                     headers={
@@ -120,9 +115,7 @@ class VercelDeployer(BaseDeployer):
         self.project_id = project_id or os.getenv("VERCEL_PROJECT_ID", "")
 
         if not self.token:
-            raise ValueError(
-                "Vercel token required. Set VERCEL_TOKEN env var."
-            )
+            raise ValueError("Vercel token required. Set VERCEL_TOKEN env var.")
 
     def deploy(self, docs_dir: Path) -> str:
         import httpx
@@ -177,8 +170,7 @@ class S3Deployer(BaseDeployer):
             import boto3
         except ImportError as exc:
             raise ImportError(
-                "boto3 is required for S3 deploy. "
-                "Install with: pip install boto3"
+                "boto3 is required for S3 deploy. Install with: pip install boto3"
             ) from exc
 
         s3 = boto3.client("s3", region_name=self.region)
@@ -187,10 +179,7 @@ class S3Deployer(BaseDeployer):
             if not path.is_file():
                 continue
             key = str(path.relative_to(docs_dir)).replace("\\", "/")
-            content_type = (
-                mimetypes.guess_type(str(path))[0]
-                or "application/octet-stream"
-            )
+            content_type = mimetypes.guess_type(str(path))[0] or "application/octet-stream"
             s3.upload_file(
                 str(path),
                 self.bucket,
@@ -217,7 +206,6 @@ def get_deployer(target: str, **kwargs) -> BaseDeployer:
     cls = DEPLOYER_REGISTRY.get(target.lower())
     if cls is None:
         raise ValueError(
-            f"Unknown deploy target '{target}'. "
-            f"Options: {', '.join(DEPLOYER_REGISTRY.keys())}"
+            f"Unknown deploy target '{target}'. Options: {', '.join(DEPLOYER_REGISTRY.keys())}"
         )
     return cls(**kwargs)

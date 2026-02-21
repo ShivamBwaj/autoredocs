@@ -106,8 +106,7 @@ class DocGenerator:
 
         if not self.api_key:
             raise ValueError(
-                "Groq API key not found. Set GROQ_API_KEY in your .env file "
-                "or pass it via config."
+                "Groq API key not found. Set GROQ_API_KEY in your .env file or pass it via config."
             )
 
     @property
@@ -134,10 +133,7 @@ class DocGenerator:
         """
         style_guide = STYLE_PROMPTS.get(self.style, STYLE_PROMPTS["google"])
 
-        user_msg = (
-            f"{style_guide}\n\n"
-            f"Signature:\n```python\n{signature}\n```\n"
-        )
+        user_msg = f"{style_guide}\n\nSignature:\n```python\n{signature}\n```\n"
         if body:
             # Limit body size to avoid token waste
             truncated = body[:1500]
@@ -157,7 +153,7 @@ class DocGenerator:
             )
             docstring = response.choices[0].message.content.strip()
             # Strip any accidental triple-quote wrapping
-            docstring = docstring.strip('`"\'')
+            docstring = docstring.strip("`\"'")
             if docstring.startswith("python\n"):
                 docstring = docstring[7:]
             return docstring
@@ -204,19 +200,21 @@ class DocGenerator:
 
             sig = ast.unparse(node)[:200]  # brief signature
             # Get the body source (for context)
-            body_lines = lines[node.lineno - 1: node.end_lineno]
+            body_lines = lines[node.lineno - 1 : node.end_lineno]
             body_src = "".join(body_lines)
 
             kind = "class" if isinstance(node, ast.ClassDef) else "function"
             docstring = self.generate_docstring(sig, body_src)
 
             if docstring:
-                suggestions.append({
-                    "name": node.name,
-                    "type": kind,
-                    "line": node.lineno,
-                    "docstring": docstring,
-                })
+                suggestions.append(
+                    {
+                        "name": node.name,
+                        "type": kind,
+                        "line": node.lineno,
+                        "docstring": docstring,
+                    }
+                )
 
         if not dry_run and suggestions:
             self._write_docstrings(filepath, source, tree, suggestions)
