@@ -110,8 +110,8 @@ pip install -e ".[dev]"
 ## Quick Start
 
 ```bash
-# 1. Initialize config
-autodocs init
+# 1. Initialize your project (creates config, CI/CD workflow, .env.example, .gitignore)
+autodocs init --source ./src
 
 # 2. Generate HTML documentation
 autodocs generate --source ./src --output ./docs --format html
@@ -128,6 +128,24 @@ autodocs ai-fill --source ./src --dry-run
 # 6. Generate + AI fill + deploy in one command
 autodocs generate --source ./src --ai --deploy netlify --incremental
 ```
+
+### Use on an existing project
+
+```bash
+cd /path/to/your-project
+pip install "autodocs[ai]"
+
+# Scaffold everything — creates autodocs.yaml, GitHub Actions, .env.example, .gitignore
+autodocs init --source ./src
+
+# Generate docs right away
+autodocs generate --source ./src --output ./docs --format html
+
+# For AI docstrings: copy .env.example to .env, add your GROQ_API_KEY
+# Then: autodocs generate --source ./src --output ./docs --format html --ai
+```
+
+> **GitHub Pages deployment**: Enable Pages at `Settings → Pages → Source → GitHub Actions`, add `GROQ_API_KEY` as a repo secret, push to `main` — done.
 
 ---
 

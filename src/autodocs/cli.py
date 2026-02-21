@@ -343,12 +343,94 @@ def preview(
 
 @app.command()
 def init(
-    path: str = typer.Option(".", "--path", help="Directory to create config in"),
+    path: str = typer.Option(".", "--path", help="Project directory to initialize"),
+    source: str = typer.Option(
+        "./src", "--source", "-s", help="Source directory containing your code"
+    ),
+    ci: bool = typer.Option(True, "--ci/--no-ci", help="Scaffold GitHub Actions workflow"),
+    with_ai: bool = typer.Option(True, "--ai/--no-ai", help="Include .env.example for AI setup"),
 ) -> None:
-    """Create a default autodocs.yaml configuration file."""
-    cfg = AutodocsConfig()
-    config_path = cfg.save(Path(path) / "autodocs.yaml")
-    console.print(f"[green]\u2713[/green] Created config at [cyan]{config_path}[/cyan]")
+    """Initialize autodocs in your project — scaffolds config, CI/CD, and env files."""
+    from autodocs.scaffold import update_gitignore, write_env_example, write_workflow
+
+    project = Path(path).resolve()
+    project_name = project.name
+    created: list[str] = []
+    skipped: list[str] = []
+
+    # 1. autodocs.yaml
+    config_path = project / "autodocs.yaml"
+    if config_path.exists():
+        skipped.append("autodocs.yaml (already exists)")
+    else:
+        cfg = AutodocsConfig(title=f"{project_name} Documentation", source=source)
+        cfg.save(config_path)
+        created.append("autodocs.yaml")
+
+    # 2. GitHub Actions workflow
+    if ci:
+        wf = write_workflow(project, source)
+        if wf:
+            created.append(".github/workflows/autodocs.yml")
+        else:
+            skipped.append(".github/workflows/autodocs.yml (already exists)")
+
+    # 3. .env.example
+    if with_ai:
+        ef = write_env_example(project)
+        if ef:
+            created.append(".env.example")
+        else:
+            skipped.append(".env.example (already exists)")
+
+    # 4. .gitignore
+    if update_gitignore(project):
+        created.append(".gitignore (updated)")
+    else:
+        skipped.append(".gitignore (already configured)")
+
+    # Print summary
+    console.print()
+    console.print(
+        Panel(
+            f"[bold cyan]autodocs[/bold cyan] initialized in [green]{project}[/green]",
+            title="✨ Project Ready",
+            border_style="cyan",
+        )
+    )
+
+    if created:
+        console.print("\n[green]✓ Created:[/green]")
+        for item in created:
+            console.print(f"  • {item}")
+
+    if skipped:
+        console.print("\n[yellow]⊘ Skipped:[/yellow]")
+        for item in skipped:
+            console.print(f"  • {item}")
+
+    # Next steps
+    console.print("\n[bold]Next steps:[/bold]\n")
+    console.print(
+        f"  1. [cyan]autodocs generate --source {source} --output docs --format html[/cyan]"
+    )
+    console.print("     Generate docs locally to preview\n")
+    console.print(f"  2. [cyan]autodocs preview --source {source}[/cyan]")
+    console.print("     Open a live preview in your browser\n")
+    if with_ai:
+        console.print("  3. [cyan]cp .env.example .env[/cyan]  →  add your GROQ_API_KEY")
+        console.print(
+            "     Get a free key at [link=https://console.groq.com]console.groq.com[/link]\n"
+        )
+    if ci:
+        console.print(
+            "  4. Enable GitHub Pages: [cyan]Settings → Pages → Source → GitHub Actions[/cyan]"
+        )
+        console.print(
+            "     Add [cyan]GROQ_API_KEY[/cyan] as a repo secret: "
+            "[cyan]Settings → Secrets → Actions[/cyan]\n"
+        )
+    console.print("  Push to [bold]main[/bold] — docs auto-deploy to GitHub Pages! 🚀\n")
 
 
 @app.command("ai-fill")
