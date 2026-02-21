@@ -49,7 +49,7 @@ jobs:
           python-version: "3.12"
 
       - name: Install autoredocs
-        run: pip install "autoredocs[ai] @ git+https://github.com/ShivamBwaj/autoredocs.git"
+        run: pip install "autoredocs[ai]"
 
       - name: Generate documentation
         run: autoredocs generate --source {source} --output _site --format html --ai --incremental
